@@ -166,7 +166,7 @@
           "type": "list",
           "items": [
             { "title": "Det blanka pappret (Låg insats)", "desc": "Att be AI:n generera en text från noll är tryggt och riskfritt. Men resultatet blir ofta platt, opersonligt och generiskt." },
-            { "title": "Skin in the game (Hög insats)", "desc": "Att våga kasta in ditt EGET ofärdiga utkast och be en panel granska det obarmhärtigt. Det kräver professionellt mod, men det är här magin sker.", "highlight": true }
+            { "title": "Skin in the game (Hög insats)", "desc": "Att våga kasta in ditt EGET ofärdiga utkast, eller en instruktion du använt i flera år, och be en panel granska det obarmhärtigt. Det kräver professionellt mod, men det är här magin sker.", "highlight": true }
           ]
         }
       ]
