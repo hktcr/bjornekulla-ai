@@ -188,13 +188,21 @@
       "subtitle": "Dags för skarpt läge. Ta fram ett material som du faktiskt arbetar med just nu, till exempel en provfråga, en inlämningsuppgift eller en lektionsplanering. Släpp in panelen. Skin in the game!<br><br><i>Hinner du? Testa gärna att analysera flera olika dokument som du planerar att använda i din undervisning.</i>"
     },
     {
-      "id": "tank-om-avslut",
+      "id": "tank-om-progression",
       "section": "bonus",
-      "type": "quote",
-      "size": "large",
-      "text": "Tänk om jag skulle kunna göra samma arbete, minst lika bra, på hälften så lång tid?",
-      "author": "",
-      "style": "typewriter"
+      "type": "rewrite-progression",
+      "title": "Tänk om...",
+      "template": "Tänk om jag skulle kunna göra {quality}, på {time}?",
+      "prefix": [
+        "Den professionella förstärkaren",
+        "Det kognitiva språnget"
+      ],
+      "steps": [
+        { "quality": "samma arbete, minst lika bra", "time": "hälften så lång tid" },
+        { "quality": "dubbelt så mycket, minst lika bra", "time": "hälften så lång tid" },
+        { "quality": "dubbelt så mycket, dubbelt så bra", "time": "lika lång tid" },
+        { "quality": "dubbelt så mycket, dubbelt så bra", "time": "hälften så lång tid" }
+      ]
     },
     {
       "id": "stilregler-demo",
