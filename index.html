@@ -2282,9 +2282,10 @@
                 }
                 return result;
             };
+            const sizeStyle = s.size === 'large' ? 'font-size: 4.5rem;' : '';
             return `<div class="slide-rewrite" id="rewrite-${s.id}" onclick="if(window.handleNextStep && window.handleNextStep()) return; else nextSlide();">
                 <div class="rewrite-prefix" data-prefixes='${JSON.stringify(s.prefix||[])}'></div>
-                <div class="rewrite-main">${buildSentence(first)}</div>
+                <div class="rewrite-main" style="${sizeStyle}">${buildSentence(first)}</div>
             </div>`;
         }
 

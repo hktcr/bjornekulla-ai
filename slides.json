@@ -38,6 +38,7 @@
       "id": "olampligt-ai",
       "section": "start",
       "type": "rewrite-progression",
+      "size": "large",
       "title": "När är det olämpligt?",
       "template": "När är det {modifier} använda AI?",
       "prefix": [],
@@ -53,7 +54,7 @@
       "type": "quote",
       "text": "\"Att vara extremt bra på att förutsäga nästa ord innebär att man förstår den underliggande verklighet som ledde till skapandet [valet] av just det ordet.\"",
       "author": "Ilya Sutskever, f.d. Chefsforskare OpenAI",
-      "comment": "💡 Det är alltså inte en 'stokastisk papegoja'. För att gissa rätt med hög precision tvingas modellen bygga en komprimerad, intern representation av hur världen fungerar.",
+      "comment": "💡 Den är alltså inte en glorifierad autokorrekt. För att vara så här träffsäker har AI:n tvingats bygga upp en underliggande förståelse för hur vår värld, vårt språk och våra ämnen hänger ihop.",
       "style": "typewriter",
       "sources": [
         {
@@ -191,6 +192,7 @@
       "id": "tank-om-progression",
       "section": "bonus",
       "type": "rewrite-progression",
+      "size": "large",
       "title": "Tänk om...",
       "template": "Tänk om jag skulle kunna göra {quality}, på {time}?",
       "prefix": [
