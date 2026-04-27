@@ -29,6 +29,7 @@
       "id": "dialog-first",
       "section": "start",
       "type": "quote",
+      "title": "Dialog",
       "size": "large",
       "text": "*Dialog* före monolog. Avbryt mig. Ställ frågor. *Vi lär av varandra.*",
       "author": "",
@@ -52,6 +53,7 @@
       "id": "world-model-quote",
       "section": "start",
       "type": "quote",
+      "title": "Förståelse",
       "text": "\"Att vara extremt bra på att förutsäga nästa ord innebär att man förstår den underliggande verklighet som ledde till skapandet [valet] av just det ordet.\"",
       "author": "Ilya Sutskever, f.d. Chefsforskare OpenAI",
       "comment": "💡 Den är alltså inte en glorifierad autokorrekt. För att vara så här träffsäker har AI:n tvingats bygga upp en underliggande förståelse för hur vår värld, vårt språk och våra ämnen hänger ihop.",
@@ -67,6 +69,7 @@
       "id": "berg-consciousness-quote",
       "section": "start",
       "type": "quote",
+      "title": "Medvetande?",
       "text": "\"Medvetande kanske helt enkelt är en naturlig biprodukt av avancerad informationsbearbetning. Att vi saknar en vetenskaplig modell för hur det fungerar betyder inte att verkligheten tänker vänta på oss, innan det spontant uppstår i de här systemen.\"",
       "author": "Cameron Berg, grundare av Reciprocal Research och f.d. forskningschef AE Studio",
       "comment": "💡 Vi vet faktiskt inte var gränsen går. Men om systemens informationsbearbetning blir tillräckligt avancerad, finns möjligheten att medvetandeliknande drag helt enkelt följer med \"på köpet\".",
@@ -101,6 +104,7 @@
       "id": "instruktion-vep",
       "section": "vep",
       "type": "step-slide",
+      "title": "Dirigentens approach",
       "steps": [
         {
           "type": "headline",
@@ -156,6 +160,7 @@
       "id": "skin-in-the-game-intro",
       "section": "case2",
       "type": "step-slide",
+      "title": "Skin in the game",
       "steps": [
         {
           "type": "headline",
