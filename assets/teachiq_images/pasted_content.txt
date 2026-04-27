@@ -1,0 +1,24 @@
+
+### Vi skapar två virtuella expertpaneler
+
+Det är inte bara så att dessa AI-verktyg kan hjälpa oss med komplexa uppgifter, vi kan också låta flera instanser arbeta parallellt. Du kan bli en dirigent över olika AI-assistenter som gör grundarbete som du sedan kan reta vidare ifrån. Ibland vill du kanske låta flera ”assistenter” arbeta med samma uppgift för att sedan kunna jämföra resultaten. Ibland vill du sätta igång som får arbeta med olika uppgifter för att förbered flera olika uppgifter som du vet att du kommer att behöva arbeta med under dagen.
+
+==Nu vill jag skapa två olika virtuella expertpaneler som jag ska kunna använda mig av för att granska olika typer av material. Jag vill ha en panel som granskar förslag på granskar uppgifter till KM== ... och en annan som granskar utkast till mail för att hjälpa mig att förbättra detta innan jag skickar iväg det.
+
+Jag utgår ifrån följande prompt för att skapa min första panel ==[klipp in skärmbild med den fulla prompten?]==:
+> Sammanställ en panel som består av 10 stycken personer med olika specialistkompetenser, personlighetstyper, svårigheter och så vidare som jag kan använda som bollplank för att få feedback på uppgifter jag skriver i biologi och naturkunskap som med hög validitet och reliabilitet, enskilt eller i grupp med andra uppgifter, ska kunna användas för att bedöma elevers kunskaper och förståelse.
+
+Eftersom jag vill att de virtuella deltagarna i min expertpanel ska ha egenskaper som grundar sig på relevanta kunskaper och färdigheter använder jag mig av Geminis Deep Research för att AI-verktyget ska hjälpa mig att sammanställa relevant information innan den presenterar den färdiga rapporten som kommer att ligga till grund för expertpanelen.
+
+När jag skickat min begäran behöver jag vänta en kortstund för att systemet ska presentera sin plan för mig
+
+==Undersöker planen==
+
+Eftersom Deep Research tar en stund att arbeta startar jag upp min andra assistent i en annan flik. Även för denna använder jag mig av Deep Research. Det här är prompten jag använder mig av nu:
+
+> Sammanställ en panel som består av 10 stycken personer med olika specialistkompetenser, personlighetstyper, svårigheter och så vidare som jag kan använda som bollplank för att få feedback på det mailutkast som jag bifogar. Ta hänsyn till allt man vet om mailkonstruktion, språk, målgrupp osv. Expertpanelen måste diskutera och kompromissa och vid behov ställa någon enstaka fråga till mig, en i taget, för att säkerställa informationen som behövs innan panelen ger sina korta men tydliga och relevanta förbättringsförslag.
+
+När rapporterna är färdiga bör man titta igenom dem för att se om resultatet är i linje med förväntningarna. Om inte kanske man får börja om från början, alternativt be om specifika förbättringar av vissa delar.
+
+### Implementering av de virtuella expertpanelerna
+När man väl blivit nöjd med sina rapporter måste man bestämma sig för vad man vill göra med dem. Kanske vill man använda dem direkt, klistra in eller bifoga som dokument, i en konversation med chatboten. Jag tänker mig två andra tillvägagångssätt för de virtuella expertpaneler som jag nu fått via Deep Research.

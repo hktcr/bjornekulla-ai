@@ -1,0 +1,49 @@
+  "filmId": 1,
+  "filmTitle": "What is a virtual expert panel?",
+  "estimatedLength": "6 min",
+  "sections": [
+    {
+      "id": 1,
+      "type": "intro",
+      "title": "The Problem",
+      "manuscript": "You're working on a complex assessment item for your digital assessment platform. You need multiple perspectives: pedagogical design, subject matter expertise, accessibility considerations, language clarity. But you don't have time to consult everyone individually. Sound familiar?",
+      "prompts": [],
+      "notes": "Pro tip: Start with a relatable problem that your colleagues face daily. This creates immediate engagement.",
+      "completed": false,
+      "duration": "0:20"
+    },
+    {
+      "id": 2,
+      "type": "explanation",
+      "title": "Tool Introduction",
+      "manuscript": "Before we dive into the three roles, let's quickly introduce the three Google AI tools we'll use in this workshop. Don't worry about mastering them now - we'll explore each one in detail in the upcoming films.\n\n**Gemini** (30 seconds)\nGemini is Google's conversational AI. Think of it as a knowledgeable colleague you can chat with. You type questions or requests, and Gemini responds. It's fast, flexible, and perfect for quick iterations. In Film 2, you'll use Gemini to create your first expert panel.\n\n**Deep Research** (30 seconds)\nDeep Research is a feature within Gemini that conducts thorough, multi-source research on a topic. Instead of giving you a quick answer, it spends 5-10 minutes analyzing multiple perspectives and synthesizing findings. It's perfect for creating well-grounded expert panels. We'll use it in Films 4 and 5.\n\n**NotebookLM** (30 seconds)\nNotebookLM is Google's source-based AI tool. You upload documents - like curriculum standards, style guides, or research papers - and NotebookLM answers questions based on those sources. Every response includes citations. It's perfect for when you need defensible, traceable feedback. We'll explore it in Film 5.\n\nNow, with these tools in mind, let's talk about the three roles that make expert panels work.",
+      "prompts": [],
+      "notes": "Pro tip: Show each tool's interface on screen while describing it. Keep tempo calm - 90 seconds is enough time.",
+      "completed": false,
+      "duration": "1:30"
+    },
+    {
+      "id": 3,
+      "type": "explanation",
+      "title": "The Solution: Expert Panel",
+      "manuscript": "What if you could assemble a virtual expert panel in seconds? A virtual expert panel is a group of AI-simulated experts, each with specific expertise, who can review your work and provide diverse perspectives. It's like having a team of consultants available 24/7.",
+      "prompts": [],
+      "notes": "Pro tip: Show the speed and convenience. Open Gemini and demonstrate how quick it is to create a panel.",
+      "completed": false,
+      "duration": "0:30"
+    },
+    {
+      "id": 4,
+      "type": "explanation",
+      "title": "The Three Roles",
+      "manuscript": "A well-designed expert panel has three essential roles, and understanding these is key to using panels effectively.\n\nFirst, the Experts (👥): They provide specialized knowledge and diverse perspectives. Each expert brings their unique lens to your problem.\n\nSecond, the Coordinator (🎯): This is crucial. The coordinator facilitates the process and asks YOU how to proceed. They don't make decisions for you, they help you lead the discussion.\n\nThird, You - The Conductor (👤): YOU are in control. You decide when to hear individual opinions, when to have discussions, and when to synthesize. Think of yourself as a conductor leading an orchestra. The coordinator is your concert master, helping you communicate with the musicians.",
+      "prompts": [],
+      "notes": "Pro tip: Use the orchestra metaphor throughout. It's memorable and accurate. Show three icons: 👥 Experts, 🎯 Coordinator, 👤 You.",
+      "completed": false,
+      "duration": "2:00"
+    },
+    {
+      "id": 5,
+      "type": "demo",
+      "title": "Example: Without Coordinator",
+      "manuscript": "Let's see what happens without a coordinator. Watch carefully. I'm asking for an expert panel to review an assessment item, but I haven't included a coordinator role.",

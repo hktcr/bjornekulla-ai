@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Sannolikhet — Interaktiv Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #FAFAF8;
+            --bg-card: #FFFFFF;
+            --text-main: #2D2D2D;
+            --text-muted: #6B6B6B;
+            --accent: #7a8f6e;
+            --accent-light: #e8ede5;
+            --bar-color: #60a5fa;
+            --border: rgba(0,0,0,0.08);
+            --font-main: 'Inter', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--bg);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+            border: 1px solid var(--border);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+        }
+
+        .sentence-box {
+            font-size: 2rem;
+            line-height: 1.5;
+            font-weight: 400;
+            margin-bottom: 48px;
+            padding: 24px;
+            background: var(--bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .token {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .token.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: var(--accent);
+            font-weight: 600;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 2.2rem;
+            background: var(--bar-color);
+            animation: blink 1s infinite;
+            margin-left: 4px;
+        }
+
+        .predictions-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .prediction-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            cursor: pointer;
+            padding: 12px 16px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .prediction-row:hover {
+            background: var(--bg);
+            border-color: var(--border);
+            transform: translateX(4px);
+        }
+
+        .pred-word {
+            width: 140px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .pred-bar-container {
+            flex-grow: 1;
+            height: 12px;
+            background: var(--border);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .pred-bar {
+            height: 100%;
+            background: var(--bar-color);
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .pred-prob {
+            width: 70px;
+            text-align: right;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .prediction-row:nth-child(1) .pred-bar { background: #3b82f6; }
+        .prediction-row:nth-child(2) .pred-bar { background: #60a5fa; }
+        .prediction-row:nth-child(3) .pred-bar { background: #93c5fd; }
+        .prediction-row:nth-child(4) .pred-bar { background: #bfdbfe; }
+
+        .controls {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+        }
+
+        .btn:hover {
+            background: var(--border);
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Mönsterigenkänning i praktiken</h1>
+        <p>En AI "tänker" inte. Den gissar bara nästa pusselbit, ord för ord, baserat på sannolikhet.</p>
+    </div>
+
+    <div class="sentence-box" id="sentenceBox">
+        <!-- Tokens go here -->
+        <span class="cursor" id="cursor"></span>
+    </div>
+
+    <div class="predictions-container" id="predictionsBox">
+        <!-- Predictions go here -->
+    </div>
+
+    <div class="controls">
+        <button class="btn" onclick="loadScenario(0)">Scenario 1: Vardag</button>
+        <button class="btn" onclick="loadScenario(1)">Scenario 2: Läroplanen</button>
+        <button class="btn" onclick="resetCurrent()">Börja om</button>
+    </div>
+</div>
+
+<script>
+    const scenarios = [
+        {
+            steps: [
+                { text: "Kalle", preds: [{w: "gick", p: 78}, {w: "sprang", p: 12}, {w: "cyklade", p: 5}, {w: "hoppade", p: 2}] },
+                { text: "gick", preds: [{w: "till", p: 85}, {w: "ut", p: 8}, {w: "hem", p: 5}, {w: "förbi", p: 1}] },
+                { text: "till", preds: [{w: "skolan", p: 45}, {w: "affären", p: 30}, {w: "parken", p: 15}, {w: "jobbet", p: 5}] },
+                { text: "skolan", preds: [{w: ".", p: 90}, {w: "för", p: 5}, {w: "och", p: 3}, {w: "på", p: 1}] }
+            ]
+        },
+        {
+            steps: [
+                { text: "Förskolan", preds: [{w: "ska", p: 82}, {w: "är", p: 10}, {w: "har", p: 5}, {w: "kan", p: 1}] },
+                { text: "ska", preds: [{w: "lägga", p: 65}, {w: "vara", p: 15}, {w: "erbjuda", p: 10}, {w: "ge", p: 5}] },
+                { text: "lägga", preds: [{w: "grunden", p: 98}, {w: "fokus", p: 1}, {w: "tid", p: 0.5}, {w: "vikt", p: 0.1}] },
+                { text: "grunden", preds: [{w: "för", p: 99}, {w: "till", p: 0.5}, {w: "på", p: 0.2}, {w: ".", p: 0.1}] },
+                { text: "för", preds: [{w: "ett", p: 85}, {w: "barnens", p: 10}, {w: "lärande", p: 2}, {w: "allas", p: 1}] },
+                { text: "ett", preds: [{w: "livslångt", p: 75}, {w: "tryggt", p: 15}, {w: "gott", p: 5}, {w: "roligt", p: 2}] },
+                { text: "livslångt", preds: [{w: "lärande", p: 99.9}, {w: "intresse", p: 0.05}, {w: "perspektiv", p: 0.01}, {w: "fokus", p: 0.01}] }
+            ]
+        }
+    ];
+
+    let currentScenarioIdx = 0;
+    let currentStepIdx = 0;
+    let currentTokens = [];
+
+    const sentenceBox = document.getElementById('sentenceBox');
+    const predictionsBox = document.getElementById('predictionsBox');
+    const cursor = document.getElementById('cursor');
+
+    function loadScenario(idx) {
+        currentScenarioIdx = idx;
+        resetCurrent();
+    }
+
+    function resetCurrent() {
+        currentStepIdx = 0;
+        currentTokens = [];
+        renderTokens();
+        renderPredictions();
+    }
+
+    function renderTokens() {
+        // Remove all old tokens
+        document.querySelectorAll('.token').forEach(t => t.remove());
+        
+        // Insert current tokens
+        currentTokens.forEach(t => {
+            let span = document.createElement('span');
+            span.className = 'token';
+            span.innerText = t;
+            sentenceBox.insertBefore(span, cursor);
+        });
+    }
+
+    function renderPredictions() {
+        predictionsBox.innerHTML = '';
+        
+        let scenario = scenarios[currentScenarioIdx];
+        if (currentStepIdx >= scenario.steps.length) {
+            predictionsBox.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:1.2rem; margin-top:20px;">Meningsbyggnad klar.</div>';
+            return;
+        }
+
+        let stepData = scenario.steps[currentStepIdx];
+        
+        // Delay bars slightly for animation effect
+        setTimeout(() => {
+            stepData.preds.forEach(p => {
+                let row = document.createElement('div');
+                row.className = 'prediction-row';
+                row.onclick = () => selectWord(p.w);
+                
+                row.innerHTML = `
+                    <div class="pred-word">${p.w}</div>
+                    <div class="pred-bar-container">
+                        <div class="pred-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="pred-prob">${p.p}%</div>
+                `;
+                
+                predictionsBox.appendChild(row);
+
+                // Trigger reflow
+                row.offsetHeight;
+                
+                // Animate bar
+                row.querySelector('.pred-bar').style.width = p.p + '%';
+            });
+        }, 50);
+    }
+
+    function selectWord(word) {
+        let scenario = scenarios[currentScenarioIdx];
+        let expectedWord = scenario.steps[currentStepIdx].text;
+        
+        // Even if they click a low probability word, we just use it visually, 
+        // but to keep the demo path simple, we force the expected word or just append the clicked word.
+        // For a controlled demo, we'll append the clicked word.
+        currentTokens.push(word);
+        
+        // Advance step if they clicked the expected word (or highest prob word)
+        // If not, we still advance but maybe the grammar breaks. To keep it simple, 
+        // we'll just advance the step index regardless.
+        currentStepIdx++;
+        
+        renderTokens();
+        renderPredictions();
+    }
+
+    // Init
+    loadScenario(1); // Start with Lgr22 as default
+</script>
+
+</body>
+</html>

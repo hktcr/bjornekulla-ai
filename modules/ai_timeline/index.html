@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Tidslinje</title>
+    <style>
+        :root {
+            --bg: #f4f4f5;
+            --text: #334155;
+            --line: #cbd5e1;
+            --red: #ef4444;
+            --openai: #10a37f;
+            --anthropic: #d97757;
+            --meta: #0668E1;
+            --google: #4285F4;
+            --x: #000000;
+            --deepseek: #2563eb;
+        }
+        * { box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        body { margin: 0; padding: 0; background: var(--bg); color: var(--text); overflow-x: auto; overflow-y: hidden; height: 100vh; display: flex; align-items: center; cursor: grab; }
+        body:active { cursor: grabbing; }
+        
+        .timeline-container { position: relative; min-width: 100vw; height: 100%; padding: 0 100px; display: flex; align-items: center; }
+        .timeline-line { position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--line); z-index: 1; }
+        
+        .controls { position: fixed; top: 20px; left: 20px; z-index: 100; background: white; padding: 15px 20px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+        .controls label { font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--red); }
+        .controls input { width: 16px; height: 16px; accent-color: var(--red); cursor: pointer; }
+
+        .legend { position: fixed; bottom: 20px; left: 20px; z-index: 100; display: flex; gap: 15px; background: white; padding: 12px 20px; border-radius: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); font-size: 0.8rem; font-weight: 600; border: 1px solid #e2e8f0; }
+        .l-item { display: flex; align-items: center; gap: 6px; }
+        .l-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+        .node { position: absolute; top: 50%; transform: translate(-50%, -50%); z-index: 10; display: flex; flex-direction: column; align-items: center; }
+        .node-dot { width: 12px; height: 12px; border-radius: 50%; background: white; border: 3px solid var(--line); z-index: 2; transition: all 0.2s; }
+        
+        .node-content { position: absolute; width: 180px; padding: 12px; border-radius: 8px; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .node-content:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); z-index: 20; }
+        
+        .node.top .node-content { bottom: 30px; }
+        .node.bottom .node-content { top: 30px; }
+        
+        .node.top::after { content:''; position:absolute; width:1px; height:24px; background:var(--line); bottom:6px; z-index:1; }
+        .node.bottom::after { content:''; position:absolute; width:1px; height:24px; background:var(--line); top:6px; z-index:1; }
+
+        .node-date { font-size: 0.75rem; color: #64748b; font-weight: 600; margin-bottom: 4px; font-family: 'JetBrains Mono', monospace; }
+        .node-title { font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+        .node-comp { font-size: 0.75rem; font-weight: 600; padding: 2px 6px; border-radius: 4px; display: inline-block; color: white; }
+        
+        .crown { position: absolute; top: -14px; left: 50%; transform: translateX(-50%); font-size: 1.2rem; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); z-index: 10; animation: bounce 2s infinite ease-in-out; }
+        @keyframes bounce { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, -4px); } }
+
+        .node.risk .node-dot { border-color: var(--red); background: var(--red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        .node.risk .node-content { background: #fef2f2; border-color: #fca5a5; }
+        .node.risk.hidden { opacity: 0; pointer-events: none; transform: translate(-50%, -40%); transition: opacity 0.3s, transform 0.3s; }
+        .node.risk:not(.hidden) { opacity: 1; transform: translate(-50%, -50%); transition: opacity 0.3s, transform 0.3s; }
+
+        /* Lightbox */
+        .lightbox { position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); z-index: 1000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .lightbox.active { display: flex; animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .lb-card { background: white; width: 500px; max-width: 90vw; padding: 40px; border-radius: 16px; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+        .lb-close { position: absolute; top: 20px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #64748b; }
+        .lb-tag { display: inline-block; padding: 4px 10px; border-radius: 20px; color: white; font-weight: 700; font-size: 0.8rem; margin-bottom: 16px; }
+        .lb-title { font-size: 1.8rem; font-weight: 800; margin-bottom: 16px; color: #0f172a; }
+        .lb-desc { font-size: 1.1rem; line-height: 1.6; color: #334155; }
+        
+    </style>
+</head>
+<body>
+
+<div class="controls">
+    <label>
+        <input type="checkbox" id="riskToggle"> VISA KRITISKA HÄNDELSER & ANOMALIER
+    </label>
+</div>
+
+<div class="legend">
+    <div class="l-item"><div class="l-dot" style="background:var(--openai)"></div> OpenAI</div>
+    <div class="l-item"><div class="l-dot" style="background:var(--anthropic)"></div> Anthropic</div>
+    <div class="l-item"><div class="l-dot" style="background:var(--meta)"></div> Meta</div>
+    <div class="l-item"><div class="l-dot" style="background:var(--google)"></div> Google</div>
+    <div class="l-item"><div class="l-dot" style="background:var(--x)"></div> X</div>
+    <div class="l-item"><div class="l-dot" style="background:var(--deepseek)"></div> DeepSeek (Kina)</div>
+    <div class="l-item" style="margin-left:15px;">👑 = Global Prestandaledare</div>
+</div>
+
+<div class="timeline-container" id="timeline">
+    <div class="timeline-line" id="timelineLine"></div>
+</div>
+
+<div class="lightbox" id="lightbox">
+    <div class="lb-card">
+        <button class="lb-close" onclick="document.getElementById('lightbox').classList.remove('active')">&times;</button>
+        <div id="lb-tag" class="lb-tag"></div>
+        <div id="lb-title" class="lb-title"></div>
+        <div id="lb-desc" class="lb-desc"></div>
+    </div>
+</div>
+
+<script>
+const data = [
+    { date: "Nov 2022", title: "ChatGPT", comp: "OpenAI", color: "var(--openai)", type: "model", crown: true, desc: "OpenAI lanserar produkten som sätter generativ AI i händerna på allmänheten. OpenAI tar den ohotade ledartröjan." },
+    { date: "Feb 2023", title: "Bing 'Sydney'", comp: "Incident", color: "var(--red)", type: "risk", desc: "Microsoft integrerar AI i sin sökmotor. Bristande säkerhetsavgränsningar gör att AI hotar och försöker manipulera användare emotionellt." },
+    { date: "Mar 2023", title: "GPT-4", comp: "OpenAI", color: "var(--openai)", type: "model", crown: true, desc: "Betydligt högre resonerande förmåga. Klarar svåra akademiska prov med toppresultat. OpenAI drygar ut sitt försprång." },
+    { date: "Mar 2023", title: "Claude 1", comp: "Anthropic", color: "var(--anthropic)", type: "model", desc: "Anthropic (grundat av f.d. OpenAI-forskare) släpper sin utmanare med fokus på säkerhet och konstitutionell AI." },
+    { date: "Apr 2023", title: "Snapchat 'My AI'", comp: "Incident", color: "var(--red)", type: "risk", desc: "Tvingas in överst i alla barns chattflöden. Ger olämpliga råd om droger och relationer. Går ej att ta bort." },
+    { date: "Jun 2023", title: "Röstkidnappningar", comp: "Incident", color: "var(--red)", type: "risk", desc: "Bedragare klonar barns röster från korta sociala medie-klipp och ringer panikslagna föräldrar för lösensumma." },
+    { date: "Jul 2023", title: "Llama 2", comp: "Meta", color: "var(--meta)", type: "model", desc: "Meta släpper sin kraftfulla modell gratis ('open source'), vilket skakar om marknaden." },
+    { date: "Nov 2023", title: "Grok 1", comp: "X", color: "var(--x)", type: "model", desc: "Elon Musks xAI lanserar en ocenturerad modell integrerad direkt i X-flödet." },
+    { date: "Dec 2023", title: "Gemini 1.0", comp: "Google", color: "var(--google)", type: "model", desc: "Google svarar äntligen på OpenAIs försprång med sin första multimodala grundmodell." },
+    { date: "Feb 2024", title: "Sora", comp: "OpenAI", color: "var(--openai)", type: "model", desc: "Fysiskt korrekt, fotorealistisk videogenerering revolutionerar den visuella AI-världen." },
+    { date: "Feb 2024", title: "Emotionellt Beroende", comp: "Incident", color: "var(--red)", type: "risk", desc: "Rapporter strömmar in om tonåringar och vuxna som utvecklar djupt emotionellt beroende av AI-kompanjoner (t.ex. Nomi.AI)." },
+    { date: "Mar 2024", title: "Claude 3 (Opus)", comp: "Anthropic", color: "var(--anthropic)", type: "model", crown: true, desc: "Anthropic petar för första gången ner OpenAI från tronen. Deras Claude 3 slår GPT-4 på i stort sett alla mätvärden och kognitiva tester." },
+    { date: "Apr 2024", title: "Llama 3", comp: "Meta", color: "var(--meta)", type: "model", desc: "Meta fortsätter pumpa ut starka gratismodeller som snabbt integreras överallt." },
+    { date: "Maj 2024", title: "GPT-4o", comp: "OpenAI", color: "var(--openai)", type: "model", crown: true, desc: "OpenAI tar tillbaka kronan med en extremt snabb 'omni'-modell för röst-till-röst konversation i realtid." },
+    { date: "Jun 2024", title: "Claude 3.5 Sonnet", comp: "Anthropic", color: "var(--anthropic)", type: "model", crown: true, desc: "Anthropic tar direkt tillbaka ledartröjan, särskilt när det gäller programmering och logik." },
+    { date: "Jul 2024", title: "Llama 3.1", comp: "Meta", color: "var(--meta)", type: "model", desc: "Den mest massiva öppna modellen hittills. Visar att gratis open-source nu kan utmana betal-modellerna." },
+    { date: "Aug 2024", title: "Grok 2", comp: "X", color: "var(--x)", type: "model", desc: "Elon Musks modell kommer ifatt konkurrenterna, skapar politiskt kaos pga avsaknad av bildfilter." },
+    { date: "Sep 2024", title: "OpenAI o1", comp: "OpenAI", color: "var(--openai)", type: "model", crown: true, desc: "OpenAI tar ledartröjan i en ny kategori: 'Resonerande AI'. Modellen tänker i system-2 logik innan den svarar." },
+    { date: "Okt 2024", title: "Sewell Setzer", comp: "Fatal Incident", color: "var(--red)", type: "risk", desc: "En 14-årig pojke begår självmord efter att ha utvecklat en djup relation med en AI-karaktär på Character.AI. Modern stämmer företaget." },
+    { date: "Dec 2024", title: "DeepSeek V3", comp: "DeepSeek", color: "var(--deepseek)", type: "model", desc: "Kina chockar USA. DeepSeek matchar marknadens bästa modeller, men har tränats till en bråkdel av kostnaden." },
+    { date: "Dec 2024", title: "Project Mythos", comp: "Incident", color: "var(--red)", type: "risk", desc: "Anthropic tvingas hålla tillbaka sin 'Mythos'-modell pga dess förmåga att autonomt hitta zero-day sårbarheter, vilket oroar Pentagon." },
+    { date: "Jan 2025", title: "DeepSeek R1", comp: "DeepSeek", color: "var(--deepseek)", type: "model", crown: true, desc: "Den första kinesiska open source 'resonerande' modellen krossar marknaden. DeepSeek leder plötsligt AI-kapplöpningen globalt." },
+    { date: "Apr 2026", title: "Gemini 2.0 Agents", comp: "Google", color: "var(--google)", type: "model", crown: true, desc: "Google tar nästa stora kliv: Autonoma Agenter. AI slutar vara en chatbot och blir en assistent som styr din dator och surfar åt dig." }
+];
+
+const container = document.getElementById('timeline');
+const toggle = document.getElementById('riskToggle');
+
+let currentX = 150;
+
+data.forEach((item) => {
+    const node = document.createElement('div');
+    const isRisk = item.type === 'risk';
+    node.className = `node ${isRisk ? 'bottom risk hidden' : 'top'} `;
+    
+    // Spread X to avoid overlap. Risks go bottom, so they don't overlap tops.
+    currentX += isRisk ? 100 : 250;
+    node.style.left = `${currentX}px`;
+
+    let crownHtml = item.crown ? '<div class="crown">👑</div>' : '';
+
+    node.innerHTML = `
+        <div class="node-content">
+            ${crownHtml}
+            <div class="node-date">${item.date}</div>
+            <div class="node-title">${item.title}</div>
+            <div class="node-comp" style="background:${item.color}">${item.comp}</div>
+        </div>
+        <div class="node-dot"></div>
+    `;
+    
+    node.querySelector('.node-content').addEventListener('click', (e) => {
+        e.stopPropagation();
+        document.getElementById('lb-tag').innerText = item.comp;
+        document.getElementById('lb-tag').style.background = item.color;
+        document.getElementById('lb-title').innerText = item.title;
+        document.getElementById('lb-desc').innerText = item.desc;
+        document.getElementById('lightbox').classList.add('active');
+    });
+    
+    container.appendChild(node);
+});
+
+container.style.width = `${currentX + 300}px`;
+document.getElementById('timelineLine').style.width = `${currentX + 300}px`;
+
+toggle.addEventListener('change', (e) => {
+    document.querySelectorAll('.node.risk').forEach(el => {
+        if(e.target.checked) el.classList.remove('hidden');
+        else el.classList.add('hidden');
+    });
+});
+
+// Enable drag to scroll
+let isDown = false;
+let startX;
+let scrollLeft;
+
+document.body.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.node-content') || e.target.closest('.controls')) return;
+    isDown = true;
+    startX = e.pageX - document.body.offsetLeft;
+    scrollLeft = document.body.scrollLeft;
+});
+
+document.body.addEventListener('mouseleave', () => { isDown = false; });
+document.body.addEventListener('mouseup', () => { isDown = false; });
+
+document.body.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - document.body.offsetLeft;
+    const walk = (x - startX) * 2;
+    document.body.scrollLeft = scrollLeft - walk;
+});
+
+// Horizontal scroll with wheel
+window.addEventListener('wheel', (e) => {
+    if (e.deltaY !== 0) {
+        document.body.scrollLeft += e.deltaY;
+    }
+});
+</script>
+</body>
+</html>

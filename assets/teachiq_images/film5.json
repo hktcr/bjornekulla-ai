@@ -1,0 +1,206 @@
+{
+  "filmId": 5,
+  "filmTitle": "Expert panel in NotebookLM with sources",
+  "estimatedLength": "8 min",
+  "sections": [
+    {
+      "id": 1,
+      "type": "intro",
+      "title": "Opening",
+      "manuscript": "In this final film, we'll use NotebookLM to create an expert panel that's grounded in YOUR sources. This is perfect for when you need defensible, traceable feedback with citations.\n\nThe difference from Gems: NotebookLM provides source citations for every claim. This is critical for quality assurance, compliance, and defensibility.\n\nYou'll need: NotebookLM account, source documents (curriculum standards, research papers, or style guides), and about 20 minutes.\n\nLet's get started.",
+      "prompts": [],
+      "notes": "Pro tip: Emphasize TRACEABILITY - every claim has a source citation",
+      "completed": false,
+      "duration": "40 sec"
+    },
+    {
+      "id": 2,
+      "type": "demo",
+      "title": "Use Deep Research to create expert panel",
+      "manuscript": "Just like in Film 4, I'll start with Deep Research to create a well-grounded expert panel. This ensures the panel is research-backed, not just invented.\n\nI'm opening Gemini and pasting the Deep Research prompt.",
+      "prompts": [
+        {
+          "id": 1,
+          "type": "system_instruction",
+          "title": "Deep Research: Create expert panel for NotebookLM",
+          "content": "Research and compile a panel of 10 experts in assessment design, curriculum development, and educational research who can provide source-based feedback on educational content. For each expert, provide:\n- Full name and professional title\n- Specific area of expertise\n- Unique perspective they bring\n- Research-backed approach to content validation\n\nEnsure the panel represents diverse methodologies and can work with source documents.",
+          "role": "coordinator",
+          "sequence": 1,
+          "context": "Using Deep Research to create expert panel for NotebookLM",
+          "expected_outcome": "Deep Research will spend 5-10 minutes researching. You'll get a comprehensive report with 10 expert profiles, each with detailed backgrounds and research-backed perspectives on source-based content validation.",
+          "troubleshooting": "If Deep Research takes longer than 10 minutes: Wait patiently. If report is shorter than expected: Ask for 'more detail on each expert's approach to source-based validation.'",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Show Deep Research progress. Mention coffee break again.",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 3,
+      "type": "demo",
+      "title": "Wait and review Deep Research",
+      "manuscript": "[Fast-forward]\n\nDeep Research is done. I'm reviewing the expert panel. Notice how each expert has expertise in working with source documents and research literature.\n\nI'm copying this entire panel description. I'll use it in NotebookLM.",
+      "prompts": [],
+      "notes": "Pro tip: Fast-forward wait time. Show scrolling through report.",
+      "completed": false,
+      "duration": "30 sec"
+    },
+    {
+      "id": 4,
+      "type": "demo",
+      "title": "Open NotebookLM and upload sources",
+      "manuscript": "Now I'm opening NotebookLM and creating a new notebook. I'll name it 'Content Review with Sources'.\n\nThe key difference from Gems: I need to upload source documents. These could be curriculum standards, research papers, style guides, or any documents you want the panel to reference.\n\nI'm uploading three sources: a curriculum standard, a research paper on assessment design, and my style guide from Film 3.",
+      "prompts": [],
+      "notes": "Pro tip: Show uploading sources clearly. Mention supported formats (PDF, Docs, web pages).",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 5,
+      "type": "demo",
+      "title": "Create expert panel in NotebookLM",
+      "manuscript": "Now I'll paste the expert panel description from Deep Research into NotebookLM's chat.\n\nThen I'll add the coordinator instructions to ensure I stay in control of the review process.",
+      "prompts": [
+        {
+          "id": 2,
+          "type": "system_instruction",
+          "title": "Expert panel + Coordinator for NotebookLM",
+          "content": "[Paste your expert panel from Deep Research here]\n\n---\n\nCOORDINATOR ROLE:\n\nYou are a professional facilitator for this expert panel. After the user provides content to review, ask:\n\n\"How would you like to proceed?\nA) Hear individual opinions from each expert (with source citations)\nB) Have the panel discuss together (with source citations)\nC) Request a synthesis (with source citations)\nD) Something else\"\n\nIMPORTANT: Every claim, recommendation, or observation MUST include a source citation from the uploaded documents. If a claim cannot be supported by the sources, clearly state that.\n\nAfter each step, ask: \"What would you like to do next?\"\n\nNever proceed without explicit user direction.",
+          "role": "coordinator",
+          "sequence": 1,
+          "context": "Creating expert panel with coordinator in NotebookLM",
+          "expected_outcome": "NotebookLM will acknowledge the expert panel and coordinator role. It will confirm that it understands to provide source citations for all claims. You're now ready to submit content for review.",
+          "troubleshooting": "If NotebookLM doesn't mention sources: Remind it: 'Please include source citations for all claims.' If coordinator doesn't ask for direction: Re-paste the coordinator instructions.",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Emphasize that EVERY claim needs a source citation.",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 6,
+      "type": "demo",
+      "title": "Submit content for review",
+      "manuscript": "Now I'll submit some content for the panel to review. I'm using the same example from Film 4 so you can compare the difference.",
+      "prompts": [
+        {
+          "id": 3,
+          "type": "example_content",
+          "title": "Example content for NotebookLM review",
+          "content": "Please review this assessment instruction:\n\n\"Make sure you explain the photosynthesis process in detail. Include all the important parts and don't forget to mention the factors that affect it. Your answer should be complete.\"\n\nPlease provide feedback grounded in the uploaded sources.",
+          "role": "user",
+          "sequence": 1,
+          "context": "Example content to review in NotebookLM",
+          "expected_outcome": "The Coordinator will ask: 'How would you like to proceed? A) Hear individual opinions (with source citations), B) Have the panel discuss together (with source citations), C) Request a synthesis (with source citations), D) Something else'. If you choose A, you'll get 10 individual expert opinions, and EACH opinion will include citations to your uploaded sources (e.g., 'According to the curriculum standard [Source 1], assessment instructions should...'). This makes the feedback defensible and traceable.",
+          "troubleshooting": "If feedback lacks source citations: Remind NotebookLM: 'Please include source citations for all claims.' If citations are vague: Ask: 'Please provide specific page numbers or section references.'",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Show yourself pasting the content. Wait for Coordinator to ask.",
+      "completed": false,
+      "duration": "40 sec"
+    },
+    {
+      "id": 7,
+      "type": "demo",
+      "title": "Review source-based feedback",
+      "manuscript": "Perfect! The Coordinator asked me how to proceed. I chose option A: individual opinions with source citations.\n\nNotice the difference from Film 4: Every suggestion now includes a source citation. For example: 'According to the curriculum standard [Source 1, page 12], assessment instructions should specify expected length and format.'\n\nThis makes the feedback defensible. If someone questions a recommendation, you can point to the exact source.",
+      "prompts": [],
+      "notes": "Pro tip: Highlight source citations clearly. Show clicking on citation to see source.",
+      "completed": false,
+      "duration": "70 sec"
+    },
+    {
+      "id": 8,
+      "type": "demo",
+      "title": "Request improvements",
+      "manuscript": "Now I'll ask the Coordinator for the next step. I want to see how the panel would improve this instruction, grounded in the sources.",
+      "prompts": [
+        {
+          "id": 4,
+          "type": "follow_up",
+          "title": "Request source-based improvements",
+          "content": "Coordinator, I'd like the panel to provide an improved version of this instruction, grounded in the uploaded sources. Please include source citations for each change.",
+          "role": "user",
+          "sequence": 1,
+          "context": "Requesting improved version with source citations",
+          "expected_outcome": "The panel will provide an improved version of the assessment instruction. Each improvement will include a source citation explaining why the change was made (e.g., 'Changed \"explain in detail\" to \"describe three factors\" [Source 2, page 45: specific instructions improve reliability]'). You'll see both the improved instruction AND the rationale with sources for each change.",
+          "troubleshooting": "If improved version lacks citations: Ask: 'Please add source citations for each change.' If changes are too minor: Ask: 'Please provide more substantial improvements based on the sources.'",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Show the improved instruction with citations for each change.",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 9,
+      "type": "demo",
+      "title": "Review improved version",
+      "manuscript": "Here's the improved instruction with source citations for each change. This is incredibly powerful for quality assurance.\n\nIf my manager asks 'Why did you change this?', I can point to the exact source: 'According to Smith et al. [Source 2, page 45], specific instructions improve scoring reliability.'\n\nThis level of traceability is what separates NotebookLM from Gems.",
+      "prompts": [],
+      "notes": "Pro tip: Show the improved instruction side-by-side with original. Highlight citations.",
+      "completed": false,
+      "duration": "50 sec"
+    },
+    {
+      "id": 10,
+      "type": "outro",
+      "title": "Closing",
+      "manuscript": "You've now used NotebookLM to create source-based expert feedback. This is perfect for quality assurance, compliance, and defensibility.\n\nTime investment: 20 minutes (including Deep Research and source upload). Time per review after that: 10 minutes. For source-based validation that would normally take 1-2 hours of manual work, this is a massive time saver.\n\nWhen to use Gems vs NotebookLM:\n- Gems: Fast, flexible, consistent style. Use for routine content review.\n- NotebookLM: Source-based, traceable, defensible. Use for quality assurance and compliance.\n\nYou now have a complete AI toolkit for content review. Thank you for participating in this workshop.",
+      "prompts": [],
+      "notes": "Pro tip: Emphasize the Gems vs NotebookLM decision framework.",
+      "completed": false,
+      "duration": "60 sec"
+    }
+  ],
+  "pause_task": {
+    "title": "Pause & Task: Create NotebookLM expert panel",
+    "duration": "25 minutes",
+    "task": "Create source-based expert panel in NotebookLM",
+    "steps": [
+      "Open Gemini, paste Deep Research prompt",
+      "Choose Deep Research, wait 5-10 minutes",
+      "Copy expert panel from report",
+      "Open NotebookLM, create new notebook",
+      "Name it Content Review with Sources",
+      "Upload 2-3 source documents (curriculum standards, research papers, style guides)",
+      "Paste expert panel + coordinator instructions",
+      "Submit example content for review",
+      "Choose option A (individual opinions with citations)",
+      "Review feedback - notice source citations",
+      "Request improved version with citations",
+      "Compare with Film 4 Gem feedback"
+    ],
+    "expected_output": "A NotebookLM notebook with expert panel that provides source-based feedback with citations",
+    "reflection_questions": [
+      "How does source-based feedback differ from Gem feedback?",
+      "When would you use NotebookLM vs Gems?",
+      "How does traceability improve defensibility?"
+    ]
+  },
+  "seminar_questions": [
+    {
+      "type": "comparison",
+      "question": "How does NotebookLM feedback differ from Gem feedback? What's the value of source citations?"
+    },
+    {
+      "type": "decision",
+      "question": "When would you use Gems vs NotebookLM? What factors influence your choice?"
+    },
+    {
+      "type": "defensibility",
+      "question": "How does source-based feedback improve defensibility? Can you think of situations where this matters?"
+    },
+    {
+      "type": "workflow",
+      "question": "How would you integrate NotebookLM into your quality assurance workflow?"
+    },
+    {
+      "type": "limitation",
+      "question": "What are the limitations of NotebookLM? When is it not enough?"
+    }
+  ]
+}

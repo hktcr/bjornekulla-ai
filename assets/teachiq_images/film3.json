@@ -1,0 +1,151 @@
+{
+  "filmId": 3,
+  "filmTitle": "Get interviewed for language/style document",
+  "estimatedLength": "7 min",
+  "sections": [
+    {
+      "id": 1,
+      "type": "intro",
+      "title": "Opening",
+      "manuscript": "In this film, you'll create a personal language and style document by letting Gemini interview you about your writing preferences.\n\nThis document will be used in Films 4 and 5 to ensure all AI-generated content matches YOUR voice and style.\n\nYou'll need: a Gemini account, about 10 minutes, and honest reflection about how you write.\n\nLet's get started.",
+      "prompts": [],
+      "notes": "Pro tip: Emphasize that this is about THEIR voice, not a generic style guide",
+      "completed": false,
+      "duration": "30 sec"
+    },
+    {
+      "id": 2,
+      "type": "demo",
+      "title": "Start the interview",
+      "manuscript": "I'm opening Gemini and starting a new conversation. Now I'll paste a prompt that asks Gemini to interview me about my writing style.\n\nNotice that I'm including the coordinator role again - this ensures I stay in control of the interview process.",
+      "prompts": [
+        {
+          "id": 1,
+          "type": "system_instruction",
+          "title": "Interview prompt for language/style document",
+          "content": "You are an expert in writing style analysis. Interview me about my writing preferences to create a comprehensive language and style document.\n\nAsk me questions about:\n- Tone and voice (professional, casual, academic, etc.)\n- Sentence structure (length, complexity, active vs passive voice)\n- Formatting conventions (lists, headings, emphasis)\n- Terminology standards (preferred terms, words to avoid)\n- Specific patterns I use (how I structure instructions, explanations, feedback)\n\nCoordinator: After each of my answers, ask:\n\"Would you like to:\nA) Continue to the next question\nB) Elaborate more on this answer\nC) Skip to document compilation\nD) Something else\"\n\nAsk one question at a time. Keep questions specific and focused.",
+          "role": "coordinator",
+          "sequence": 1,
+          "context": "Starting an interview to create a personal style document",
+          "expected_outcome": "Gemini will start the interview by asking you the first question about your writing style. The question will be specific and focused (e.g., 'How do you typically structure instructions for learners?' or 'What tone do you aim for in your writing?'). After you answer, the Coordinator will ask: 'Would you like to: A) Continue to the next question, B) Elaborate more on this answer, C) Skip to document compilation, D) Something else'. This gives you control over the pace and depth of the interview.",
+          "troubleshooting": "If you get multiple questions at once: Ask 'Please ask one question at a time.' If Coordinator doesn't offer options: Remind it: 'Please ask me how I'd like to proceed after each answer.'",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: The coordinator ensures you can elaborate or skip ahead at any time",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 3,
+      "type": "demo",
+      "title": "Answer questions",
+      "manuscript": "Gemini is asking me about my writing style. I'm going to answer honestly and specifically.\n\nNotice how I'm giving examples, not just descriptions. Instead of saying 'I use clear language,' I say 'I use clear language by avoiding jargon. For example, I write \"use\" instead of \"utilize\".'\n\nThis specificity makes the final document much more useful.",
+      "prompts": [],
+      "notes": "Pro tip: Show yourself answering 2-3 questions with specific examples",
+      "completed": false,
+      "duration": "90 sec"
+    },
+    {
+      "id": 4,
+      "type": "demo",
+      "title": "Compile the document",
+      "manuscript": "After answering 5-6 questions, I feel I've given enough information. The coordinator is asking me what I want to do next.\n\nI'm going to choose option C: skip to document compilation.\n\nNow I'll ask Gemini to compile everything into a comprehensive style document.",
+      "prompts": [
+        {
+          "id": 2,
+          "type": "follow_up",
+          "title": "Request document compilation",
+          "content": "Coordinator, I'm ready for document compilation. Please create a comprehensive language and style document based on my answers. Include sections on tone, sentence structure, formatting, terminology, and specific patterns. Provide concrete examples from my answers.",
+          "role": "user",
+          "sequence": 1,
+          "context": "After interview, requesting compilation of style document",
+          "expected_outcome": "Gemini will compile a comprehensive language and style document based on your interview answers. The document will be 400-600 words and include sections on: tone and voice, sentence structure, formatting conventions, terminology standards, and specific patterns you use. It will include concrete examples from your answers. The document will be detailed enough that someone else could use it to write in your style. Generation takes 30-40 seconds.",
+          "troubleshooting": "If document is too short: Ask 'Please provide more detail and examples in each section.' If document is too generic: Ask 'Please include specific examples from my answers to make this more personalized.'",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Save this document - you'll use it in Films 4 and 5",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 5,
+      "type": "demo",
+      "title": "Review the document",
+      "manuscript": "Here's my personal style document. Notice how it includes specific examples from my answers.\n\nLet me scroll through it. See how it captures my tone preferences, sentence structure, formatting conventions, and specific patterns I use. This is detailed enough that someone else could use it to write in my style.\n\nNow, let me show you exactly what to do with this document.",
+      "prompts": [],
+      "notes": "Pro tip: Show the document on screen and highlight key sections. Scroll slowly so viewers can read.",
+      "completed": false,
+      "duration": "50 sec"
+    },
+    {
+      "id": 6,
+      "type": "explanation",
+      "title": "How to use this document",
+      "manuscript": "This is important - here's exactly what you'll do with your style document:\n\n**Step 1: Save it now**\nCopy the entire document and save it in Google Docs. Name it 'My Writing Style Guide' or something similar. You'll need this file in the next two films.\n\n**Step 2: In Film 4 (Gem)**\nWhen you create your Gem, you'll paste this style document directly into the Gem Instructions field. I'll show you exactly where. This makes your Gem always write in YOUR style.\n\n**Step 3: In Film 5 (NotebookLM)**\nWhen you create your NotebookLM notebook, you'll upload this style document as one of your sources. I'll show you exactly how. This makes NotebookLM's feedback align with YOUR preferences.\n\n**The result:** Instead of generic AI feedback, you get feedback that sounds like it's coming from someone who knows your style intimately. That's the power of this document.\n\nSo right now, save this document. You'll use it in 10 minutes.",
+      "prompts": [],
+      "notes": "Pro tip: Show Google Docs interface. Emphasize 'save it NOW' - don't let them forget. Show the document being saved.",
+      "completed": false,
+      "duration": "70 sec"
+    },
+    {
+      "id": 7,
+      "type": "outro",
+      "title": "Closing",
+      "manuscript": "You've now created a personal language and style document. This took about 10 minutes.\n\nWithout AI, creating such a document would require hours of self-reflection and writing. Many people never do it because it's too time-consuming.\n\nBut now you have a document that captures YOUR voice. In Film 4, we'll use this to create a Gem that always writes in your style. In Film 5, we'll use it in NotebookLM for source-based content review.\n\nSee you in the next film.",
+      "prompts": [],
+      "notes": "",
+      "completed": false,
+      "duration": "50 sec"
+    }
+  ],
+  "pause_task": {
+    "title": "Pause & Task: Create your style document",
+    "duration": "15 minutes",
+    "task": "Conduct the interview and create your personal style document",
+    "steps": [
+      "Open a new Gemini conversation",
+      "Copy 'Interview prompt' from interface",
+      "Paste in Gemini and press Enter",
+      "Read first question from Gemini",
+      "Answer honestly and specifically - give examples, not just descriptions (Example: Instead of 'I use clear language' → 'I use clear language by avoiding jargon. E.g. I write \"use\" instead of \"utilize\".')",
+      "When Coordinator asks 'How would you like to proceed?' - choose A) Continue to next question",
+      "Repeat steps 4-6 for 5-6 questions",
+      "When you feel ready - choose C) Skip to document compilation",
+      "Copy 'Request document compilation' prompt from interface",
+      "Paste and press Enter",
+      "Read your personal style document",
+      "IMPORTANT: Save document to Google Docs (name it 'My Writing Style Guide') - you'll use this in Film 4 and 5",
+      "Verify you can access the saved document"
+    ],
+    "expected_output": "A personal language/style document (400-600 words) saved in Google Docs. You'll paste this into your Gem Instructions in Film 4, and upload it as a source in NotebookLM in Film 5. This makes all AI feedback personalized to YOUR style.",
+    "reflection_questions": [
+      "What surprised you? Do you write differently than you thought?",
+      "What felt accurate? Which parts of the document felt exactly right?",
+      "How could this improve team consistency? If everyone on the team had such a document?"
+    ]
+  },
+  "seminar_questions": [
+    {
+      "type": "self_reflection",
+      "question": "What surprised you most in your own style document? Do you write differently than you thought?"
+    },
+    {
+      "type": "team",
+      "question": "If everyone on your team had a personal style document, how would that improve team consistency? What would you do with the documents?"
+    },
+    {
+      "type": "application",
+      "question": "What other uses can you think of for a personal style document, beyond adding it to Gems and NotebookLM?"
+    },
+    {
+      "type": "process",
+      "question": "How often should you update your style document? What happens when your style evolves?"
+    },
+    {
+      "type": "challenge",
+      "question": "Can a style document become too restrictive? How do you balance consistency with creativity?"
+    }
+  ]
+}

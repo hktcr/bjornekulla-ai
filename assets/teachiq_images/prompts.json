@@ -1,0 +1,208 @@
+{
+  "sections": [
+    {
+      "id": 1,
+      "title": "Pre-Workshop Checklist",
+      "prompts": [
+        {
+          "id": 1,
+          "text": "Before starting this workshop, please ensure you have:\n1. Google Workspace account with Gemini Advanced access\n2. NotebookLM enabled in your account\n3. A sample exam question ready to test (biology or natural science)\n4. Stable internet connection",
+          "notes": "Show this checklist at the beginning",
+          "original": "Before starting this workshop, please ensure you have:\n1. Google Workspace account with Gemini Advanced access\n2. NotebookLM enabled in your account\n3. A sample exam question ready to test (biology or natural science)\n4. Stable internet connection"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Gemini Basics",
+      "prompts": [
+        {
+          "id": 2,
+          "text": "What are the key concepts in photosynthesis?",
+          "notes": "Example question to test Gemini",
+          "original": "What are the key concepts in photosynthesis?"
+        },
+        {
+          "id": 3,
+          "text": "REFLECTION: How could you use Gemini for quick questions in your teaching?",
+          "notes": "Show this reflection prompt for 30 seconds after the task",
+          "original": "REFLECTION: How could you use Gemini for quick questions in your teaching?"
+        },
+        {
+          "id": 4,
+          "text": "WHY THIS MATTERS: Because it connects to your Google Workspace, so it can summarize emails, search your Drive, and access your Calendar without you copying and pasting.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: Because it connects to your Google Workspace, so it can summarize emails, search your Drive, and access your Calendar without you copying and pasting."
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Connect Gemini to Google Workspace",
+      "prompts": [
+        {
+          "id": 5,
+          "text": "WHY THIS MATTERS: So Gemini can help you with real work, like summarizing meeting notes or finding that document you saved last week.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: So Gemini can help you with real work, like summarizing meeting notes or finding that document you saved last week."
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Compare Two Models",
+      "prompts": [
+        {
+          "id": 6,
+          "text": "Are you familiar with the digital tool Kunskapsmatrisen?",
+          "notes": "Use this same prompt in both 2.5 Flash and 2.5 Pro tabs",
+          "original": "Are you familiar with the digital tool Kunskapsmatrisen?"
+        },
+        {
+          "id": 7,
+          "text": "REFLECTION: Which model would you use for quick questions? Which for complex analysis?",
+          "notes": "Show this reflection prompt for 30 seconds after the task",
+          "original": "REFLECTION: Which model would you use for quick questions? Which for complex analysis?"
+        },
+        {
+          "id": 8,
+          "text": "WHY THIS MATTERS: Flash is faster and cheaper. Pro is slower but more thoughtful. Choose based on your task.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: Flash is faster and cheaper. Pro is slower but more thoughtful. Choose based on your task."
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Create Expert Panel 1: Exam Questions Review",
+      "prompts": [
+        {
+          "id": 9,
+          "text": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on exam questions I write in biology and natural science. The panel's feedback should support high validity and reliability, whether the exam question is used on its own or bundled with others, so that it can be used to assess students' knowledge and understanding.\n\nSince I want the virtual participants' traits to be grounded in relevant knowledge and skills, I am using Deep Research so Gemini first gathers and compiles relevant information before it presents the finished report that will form the basis for the expert panel.",
+          "notes": "Use Deep Research for this prompt. Takes 5-10 minutes.",
+          "original": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on exam questions I write in biology and natural science. The panel's feedback should support high validity and reliability, whether the exam question is used on its own or bundled with others, so that it can be used to assess students' knowledge and understanding.\n\nSince I want the virtual participants' traits to be grounded in relevant knowledge and skills, I am using Deep Research so Gemini first gathers and compiles relevant information before it presents the finished report that will form the basis for the expert panel."
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Create Expert Panel 2: Email Improvement",
+      "prompts": [
+        {
+          "id": 10,
+          "text": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on the email draft I attach. Consider what is known about email construction, language, audience, and tone. The expert panel must discuss and compromise and, if needed, ask me one brief clarifying question at a time before giving short, clear, and relevant improvement suggestions.",
+          "notes": "Use Deep Research for this prompt. Start while Panel 1 is running.",
+          "original": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on the email draft I attach. Consider what is known about email construction, language, audience, and tone. The expert panel must discuss and compromise and, if needed, ask me one brief clarifying question at a time before giving short, clear, and relevant improvement suggestions."
+        },
+        {
+          "id": 11,
+          "text": "REFLECTION: How could these expert panels save you time in your daily work?",
+          "notes": "Show this reflection prompt for 30 seconds after both panels are done",
+          "original": "REFLECTION: How could these expert panels save you time in your daily work?"
+        },
+        {
+          "id": 12,
+          "text": "WHY THIS MATTERS: Because one perspective can miss things. Ten perspectives catch blind spots and improve validity.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: Because one perspective can miss things. Ten perspectives catch blind spots and improve validity."
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "Implement Panel in NotebookLM",
+      "prompts": [
+        {
+          "id": 13,
+          "text": "Have the expert panel review this exam question I'm working on.",
+          "notes": "Use this in NotebookLM after adding sources. Paste your exam question before this prompt.",
+          "original": "Have the expert panel review this exam question I'm working on."
+        },
+        {
+          "id": 14,
+          "text": "What specific improvements would you suggest for validity?",
+          "notes": "Follow-up prompt to get more detailed feedback",
+          "original": "What specific improvements would you suggest for validity?"
+        },
+        {
+          "id": 15,
+          "text": "Rewrite the question to address these concerns.",
+          "notes": "Use this to get a revised version of your exam question",
+          "original": "Rewrite the question to address these concerns."
+        },
+        {
+          "id": 16,
+          "text": "REFLECTION: How could NotebookLM help you align your exam questions with official curriculum standards?",
+          "notes": "Show this reflection prompt for 30 seconds after the task",
+          "original": "REFLECTION: How could NotebookLM help you align your exam questions with official curriculum standards?"
+        },
+        {
+          "id": 17,
+          "text": "WHY THIS MATTERS: Because it shows you exactly which source supports each claim, making your exam questions defensible and aligned with official guidelines.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: Because it shows you exactly which source supports each claim, making your exam questions defensible and aligned with official guidelines."
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "Create Gem for Email Improvement",
+      "prompts": [
+        {
+          "id": 18,
+          "text": "Hi, I wanted to let you know that the test is next week. Make sure you study. Let me know if you have questions. Thanks.",
+          "notes": "Example email to test your Mail-assistant Gem",
+          "original": "Hi, I wanted to let you know that the test is next week. Make sure you study. Let me know if you have questions. Thanks."
+        },
+        {
+          "id": 19,
+          "text": "REFLECTION: What other workflows could you save as Gems? Lesson planning? Student feedback?",
+          "notes": "Show this reflection prompt for 30 seconds after creating the Gem",
+          "original": "REFLECTION: What other workflows could you save as Gems? Lesson planning? Student feedback?"
+        },
+        {
+          "id": 20,
+          "text": "WHY THIS MATTERS: Because you can save your expert workflows and reuse them instantly, without rebuilding the panel each time.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: Because you can save your expert workflows and reuse them instantly, without rebuilding the panel each time."
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "Real-World Scenario",
+      "prompts": [
+        {
+          "id": 21,
+          "text": "What are common student misconceptions about cellular respiration?",
+          "notes": "Maria's first prompt in the real-world scenario",
+          "original": "What are common student misconceptions about cellular respiration?"
+        },
+        {
+          "id": 22,
+          "text": "Are these questions aligned with curriculum standards?",
+          "notes": "Maria's prompt in NotebookLM to validate exam questions",
+          "original": "Are these questions aligned with curriculum standards?"
+        },
+        {
+          "id": 23,
+          "text": "WHY THIS MATTERS: Because each tool has a strength. Combined, they create a powerful workflow that saves time and improves quality.",
+          "notes": "Show as overlay for 5 seconds",
+          "original": "WHY THIS MATTERS: Because each tool has a strength. Combined, they create a powerful workflow that saves time and improves quality."
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "Final Reflection",
+      "prompts": [
+        {
+          "id": 24,
+          "text": "Write down:\n- Your top 3 learnings from today's workflow\n- 1 question you want to explore further\n- 1 specific way you'll use these tools in your teaching this week",
+          "notes": "Final reflection task at the end of the workshop",
+          "original": "Write down:\n- Your top 3 learnings from today's workflow\n- 1 question you want to explore further\n- 1 specific way you'll use these tools in your teaching this week"
+        }
+      ]
+    }
+  ]
+}

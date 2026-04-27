@@ -1,0 +1,56 @@
+[
+  {
+    "section": "4. Create Two Virtual Expert Panels with Deep Research",
+    "type": "system_instruction",
+    "content": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on exam questions I write in biology and natural science. The panel's feedback should support high validity and reliability, whether the exam question is used on its own or bundled with others, so that it can be used to assess students' knowledge and understanding.  Since I want the virtual participants' traits to be grounded in relevant knowledge and skills, I am using Deep Research so Gemini first gathers and compiles relevant information before it presents the finished report that will form the basis for the expert panel.",
+    "line": 222
+  },
+  {
+    "section": "4. Create Two Virtual Expert Panels with Deep Research",
+    "type": "system_instruction",
+    "content": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on the email draft I attach. Consider what is known about email construction, language, audience, and tone. The expert panel must discuss and compromise and, if needed, ask me one brief clarifying question at a time before giving short, clear, and relevant improvement suggestions.",
+    "line": 260
+  },
+  {
+    "section": "5. Implement the Panels in Practice: Expert Panel for Exam Question Creation in NotebookLM",
+    "type": "example_content",
+    "content": "Explain the process of photosynthesis and its role in the carbon cycle. Include the chemical equation and describe how energy is transferred.",
+    "line": 378
+  },
+  {
+    "section": "5. Implement the Panels in Practice: Expert Panel for Exam Question Creation in NotebookLM",
+    "type": "follow_up",
+    "content": "Have the expert panel review this exam question I'm working on.",
+    "line": 382
+  },
+  {
+    "section": "5. Implement the Panels in Practice: Expert Panel for Exam Question Creation in NotebookLM",
+    "type": "follow_up",
+    "content": "What specific improvements would you suggest for validity?",
+    "line": 395
+  },
+  {
+    "section": "5. Implement the Panels in Practice: Expert Panel for Exam Question Creation in NotebookLM",
+    "type": "follow_up",
+    "content": "Rewrite the question to address these concerns.",
+    "line": 401
+  },
+  {
+    "section": "5. Implement the Panels in Practice: Expert Panel for Exam Question Creation in NotebookLM",
+    "type": "example_content",
+    "content": "Describe the process of photosynthesis, including the light-dependent and light-independent reactions. Explain how the products of photosynthesis contribute to the carbon cycle.",
+    "line": 406
+  },
+  {
+    "section": "6. Create a Gem for Improving Emails",
+    "type": "example_content",
+    "content": "Hi, I wanted to let you know that the test is next week. Make sure you study. Let me know if you have questions. Thanks.",
+    "line": 499
+  },
+  {
+    "section": "7. Real-World Scenario: Putting It All Together",
+    "type": "follow_up",
+    "content": "What are common student misconceptions about cellular respiration?",
+    "line": 558
+  }
+]

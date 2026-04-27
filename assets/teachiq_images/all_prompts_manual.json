@@ -1,0 +1,147 @@
+{
+  "film1_gemini_basics": [
+    {
+      "id": 1,
+      "section": "Gemini Basics",
+      "type": "example_content",
+      "title": "Test question for Gemini",
+      "content": "What are the key concepts in photosynthesis?",
+      "role": "user",
+      "context": "Testing Gemini for the first time",
+      "line_in_manuscript": 96
+    },
+    {
+      "id": 2,
+      "section": "Compare Two Models",
+      "type": "example_content",
+      "title": "Model comparison prompt",
+      "content": "Are you familiar with the digital tool Kunskapsmatrisen?",
+      "role": "user",
+      "context": "Comparing 2.5 Flash vs 2.5 Pro",
+      "line_in_manuscript": 159
+    }
+  ],
+  "film2_deep_research_panels": [
+    {
+      "id": 3,
+      "section": "Panel 1: Exam Question Review Panel",
+      "type": "system_instruction",
+      "title": "Deep Research: Exam Question Panel",
+      "content": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on exam questions I write in biology and natural science. The panel's feedback should support high validity and reliability, whether the exam question is used on its own or bundled with others, so that it can be used to assess students' knowledge and understanding.\n\nSince I want the virtual participants' traits to be grounded in relevant knowledge and skills, I am using Deep Research so Gemini first gathers and compiles relevant information before it presents the finished report that will form the basis for the expert panel.",
+      "role": "user",
+      "context": "Creating expert panel for exam question review using Deep Research",
+      "line_in_manuscript": 220
+    },
+    {
+      "id": 4,
+      "section": "Panel 2: Email Improvement Panel",
+      "type": "system_instruction",
+      "title": "Deep Research: Email Panel",
+      "content": "Compile a panel of 10 people with diverse specialist competencies, personality types, and challenges that I can use as a sounding board for feedback on the email draft I attach. Consider what is known about email construction, language, audience, and tone. The expert panel must discuss and compromise and, if needed, ask me one brief clarifying question at a time before giving short, clear, and relevant improvement suggestions.",
+      "role": "user",
+      "context": "Creating expert panel for email improvement using Deep Research",
+      "line_in_manuscript": 260
+    }
+  ],
+  "film3_notebooklm": [
+    {
+      "id": 5,
+      "section": "Test the Notebook",
+      "type": "example_content",
+      "title": "Example exam question",
+      "content": "Explain the process of photosynthesis and its role in the carbon cycle. Include the chemical equation and describe how energy is transferred.",
+      "role": "user",
+      "context": "Sample exam question to test NotebookLM with expert panel",
+      "line_in_manuscript": 377
+    },
+    {
+      "id": 6,
+      "section": "Test the Notebook",
+      "type": "follow_up",
+      "title": "Request panel review",
+      "content": "Have the expert panel review this exam question I'm working on.",
+      "role": "user",
+      "context": "Asking NotebookLM to use the expert panel to review the question",
+      "line_in_manuscript": 382
+    },
+    {
+      "id": 7,
+      "section": "Test the Notebook",
+      "type": "follow_up",
+      "title": "Ask for validity improvements",
+      "content": "What specific improvements would you suggest for validity?",
+      "role": "user",
+      "context": "Follow-up question to get more specific feedback",
+      "line_in_manuscript": 395
+    },
+    {
+      "id": 8,
+      "section": "Test the Notebook",
+      "type": "follow_up",
+      "title": "Request rewrite",
+      "content": "Rewrite the question to address these concerns.",
+      "role": "user",
+      "context": "Asking the panel to rewrite the exam question",
+      "line_in_manuscript": 401
+    },
+    {
+      "id": 9,
+      "section": "Test the Notebook",
+      "type": "example_content",
+      "title": "Improved exam question",
+      "content": "Describe the process of photosynthesis, including the light-dependent and light-independent reactions. Explain how the products of photosynthesis contribute to the carbon cycle.",
+      "role": "assistant",
+      "context": "The rewritten exam question after panel feedback",
+      "line_in_manuscript": 406
+    }
+  ],
+  "film4_gems_email": [
+    {
+      "id": 10,
+      "section": "Create a Gem for Improving Emails",
+      "type": "example_content",
+      "title": "Example email draft",
+      "content": "Hi, I wanted to let you know that the test is next week. Make sure you study. Let me know if you have questions. Thanks.",
+      "role": "user",
+      "context": "Sample email to test the Mail-assistant Gem",
+      "line_in_manuscript": 499
+    }
+  ],
+  "film5_real_world_scenario": [
+    {
+      "id": 11,
+      "section": "Real-World Scenario: Maria's Workflow",
+      "type": "follow_up",
+      "title": "Research misconceptions",
+      "content": "What are common student misconceptions about cellular respiration?",
+      "role": "user",
+      "context": "Maria's first step - quick research with Gemini",
+      "line_in_manuscript": 558
+    },
+    {
+      "id": 12,
+      "section": "Real-World Scenario: Maria's Workflow",
+      "type": "follow_up",
+      "title": "Validate alignment",
+      "content": "Are these questions aligned with curriculum standards?",
+      "role": "user",
+      "context": "Maria validates questions in NotebookLM with syllabus sources",
+      "line_in_manuscript": 573
+    }
+  ],
+  "summary": {
+    "total_prompts": 12,
+    "by_type": {
+      "system_instruction": 2,
+      "example_content": 5,
+      "follow_up": 5
+    },
+    "by_film": {
+      "film1": 2,
+      "film2": 2,
+      "film3": 5,
+      "film4": 1,
+      "film5": 2
+    }
+  }
+}

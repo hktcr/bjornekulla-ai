@@ -1,0 +1,247 @@
+{
+  "meta": {
+    "project": "AI-Workshop Björnekullaskolan",
+    "event": "Workshop 7-9",
+    "date": "2026-04-27",
+    "presenter": {
+      "name": "Håkan Karlsson",
+      "title": "Kommunlektor",
+      "org": "Åstorps kommun"
+    }
+  },
+  "sections": [
+    { "id": "start", "label": "Start", "color": "#7a8f6e" },
+    { "id": "vep", "label": "VEP-konceptet", "color": "#4a6274" },
+    { "id": "case1", "label": "Case: Mejlet", "color": "#c4956a" },
+    { "id": "case2", "label": "Case: Lektionen", "color": "#b05050" },
+    { "id": "bonus", "label": "Bonus", "color": "#9ca3af" }
+  ],
+  "slides": [
+    {
+      "id": "title",
+      "section": "start",
+      "type": "title",
+      "title": "Från publik till dirigent",
+      "subtitle": "Att leda AI i professionellt arbete",
+      "meta": "Björnekullaskolan · 27 april 2026"
+    },
+    {
+      "id": "dialog-first",
+      "section": "start",
+      "type": "quote",
+      "size": "large",
+      "text": "*Dialog* före monolog. Avbryt mig. Ställ frågor. *Vi lär av varandra.*",
+      "author": "",
+      "style": "typewriter"
+    },
+    {
+      "id": "olampligt-ai",
+      "section": "start",
+      "type": "rewrite-progression",
+      "title": "När är det olämpligt?",
+      "template": "När är det {modifier} använda AI?",
+      "prefix": [],
+      "steps": [
+        { "modifier": "olämpligt att" },
+        { "modifier": "olämpligt att INTE" }
+      ]
+    },
+    {
+      "id": "tank-om-progression",
+      "section": "start",
+      "type": "rewrite-progression",
+      "title": "Tänk om...",
+      "template": "Tänk om jag skulle kunna göra {quality}, på {time}?",
+      "prefix": [
+        "Den professionella förstärkaren",
+        "Det kognitiva språnget"
+      ],
+      "steps": [
+        { "quality": "samma arbete, minst lika bra", "time": "hälften så lång tid" },
+        { "quality": "dubbelt så mycket, minst lika bra", "time": "hälften så lång tid" },
+        { "quality": "dubbelt så mycket, dubbelt så bra", "time": "lika lång tid" },
+        { "quality": "dubbelt så mycket, dubbelt så bra", "time": "hälften så lång tid" }
+      ]
+    },
+    {
+      "id": "world-model-quote",
+      "section": "start",
+      "type": "quote",
+      "text": "\"Att vara extremt bra på att förutsäga nästa ord innebär att man förstår den underliggande verklighet som ledde till skapandet [valet] av just det ordet.\"",
+      "author": "Ilya Sutskever, f.d. Chefsforskare OpenAI",
+      "comment": "💡 Det är alltså inte en 'stokastisk papegoja'. För att gissa rätt med hög precision tvingas modellen bygga en komprimerad, intern representation av hur världen fungerar.",
+      "style": "typewriter",
+      "sources": [
+        {
+          "name": "MIT (2024): Language Models Represent Space and Time",
+          "url": "https://arxiv.org/abs/2310.02207"
+        }
+      ]
+    },
+    {
+      "id": "berg-consciousness-quote",
+      "section": "start",
+      "type": "quote",
+      "text": "\"Medvetande kanske helt enkelt är en naturlig biprodukt av avancerad informationsbearbetning. Att vi saknar en vetenskaplig modell för hur det fungerar betyder inte att verkligheten tänker vänta på oss, innan det spontant uppstår i de här systemen.\"",
+      "author": "Cameron Berg, grundare av Reciprocal Research och f.d. forskningschef AE Studio",
+      "comment": "💡 Vi vet faktiskt inte var gränsen går. Men om systemens informationsbearbetning blir tillräckligt avancerad, finns möjligheten att medvetandeliknande drag helt enkelt följer med 'på köpet'.",
+      "style": "typewriter"
+    },
+    {
+      "id": "intro-vep",
+      "section": "vep",
+      "type": "title",
+      "title": "VEP-konceptet",
+      "subtitle": "Virtuell ExpertPanel"
+    },
+    {
+      "id": "tre-roller",
+      "section": "vep",
+      "type": "roles-diagram",
+      "title": "Hela metoden bygger på två roller",
+      "roles": [
+        {
+          "name": "Roll 1: Dirigenten (DU)",
+          "image": "assets/vep_conductor.png",
+          "function": "Styr processen, har full kontroll och fäller det slutgiltiga avgörandet."
+        },
+        {
+          "name": "Roll 2: Expertpanelen (AI)",
+          "image": "assets/vep_expert_panel.png",
+          "function": "Bidrar med specialiserad kunskap, granskning och alternativa perspektiv."
+        }
+      ]
+    },
+    {
+      "id": "instruktion-vep",
+      "section": "vep",
+      "type": "step-slide",
+      "steps": [
+        {
+          "type": "headline",
+          "title": "Dirigentens approach",
+          "subtitle": "Inga färdiga recept, bara en professionell metod"
+        },
+        {
+          "type": "list",
+          "items": [
+            { "title": "Din professionella spelplan", "desc": "Dra in AI:n i din professionella verklighet. Våga kasta in ett eget ofärdigt utkast, en luddig provfråga eller ett lektionsupplägg som skaver. Undvik trygga, påhittade testexempel." },
+            { "title": "Kräv dialog, inte leverans", "desc": "Se AI:n som en sparringpartner, inte en skrivmaskin. Be den ställa motfrågor och peka ut brister som du sedan själv värderar.", "highlight": true }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "case-mail-intro",
+      "section": "case1",
+      "type": "title",
+      "title": "Case 1",
+      "subtitle": "Konfliktmejlet",
+      "meta": ""
+    },
+    {
+      "id": "case-mail-names",
+      "section": "case1",
+      "type": "name-input",
+      "title": "Hjälp mig sätta scenen",
+      "subtitle": "Vi behöver tre frivilliga namn till vårt fiktiva case"
+    },
+    {
+      "id": "mail-foralder",
+      "section": "case1",
+      "type": "email-mockup",
+      "title": "Mail: Föräldern",
+      "subject": "Ang. Biologiprovet - Helt orimligt!",
+      "from": "[MAMMA] <[MAMMA].mamma@gmail.com>",
+      "to": "[LÄRARE] <[LÄRARE]@astorp.se>",
+      "text": "Hej [LÄRARE]!<br><br>Vi måste prata om biologiprovet som [ELEV] fick tillbaka idag. Han kom hem och var helt knäckt. Han hade pluggat hela helgen och kunde precis allt som stod i instuderingsfrågorna, ändå fick han bara E.<br><br>Han säger att provet handlade om helt andra saker som ni bara nämnt i förbifarten och att det fanns svåra resonemangsuppgifter som ni inte alls har tränat på. Det är ju helt orimligt att ni testar eleverna på saker ni inte gått igenom ordentligt! Hur ska de ha en chans att nå högre betyg när kraven är så här otydliga?<br><br>Vi förväntar oss att de sista två uppgifterna stryks från bedömningen, eller att han får en chans att göra om provet.<br><br>Hälsningar,<br>[MAMMA] ([ELEV]s mamma)"
+    },
+    {
+      "id": "mail-svar",
+      "section": "case1",
+      "type": "email-mockup",
+      "title": "Mail: Lärarens svar",
+      "subject": "Sv: Ang. Biologiprovet - Helt orimligt!",
+      "from": "[LÄRARE] <[LÄRARE]@astorp.se>",
+      "to": "[MAMMA] <[MAMMA].mamma@gmail.com>",
+      "text": "Hej [MAMMA],<br><br>[ELEV]s resultat beror inte på att provet var felaktigt utformat. De sista uppgifterna prövade förmågan att föra resonemang, vilket vi absolut har övat på.<br><br>Problemet är att [ELEV] ofta är okoncentrerad på lektionerna och pratar med andra istället för att lyssna vid genomgångarna. Han har dessutom inte lämnat in sin sista inlämningsuppgift. Om han faktiskt gjorde det han skulle på lektionstid hade han haft en bättre chans på de svårare frågorna.<br><br>Vi kommer inte att stryka några uppgifter eller låta honom göra om provet, eftersom det vore orättvist mot de andra eleverna.<br><br>Mvh,<br>[LÄRARE]"
+    },
+
+    {
+      "id": "skin-in-the-game-intro",
+      "section": "case2",
+      "type": "step-slide",
+      "steps": [
+        {
+          "type": "headline",
+          "title": "Skin in the game",
+          "subtitle": "Att ha något personligt på spel"
+        },
+        {
+          "type": "list",
+          "items": [
+            { "title": "Det blanka pappret (Låg insats)", "desc": "Att be AI:n generera en text från noll är tryggt och riskfritt. Men resultatet blir ofta platt, opersonligt och generiskt." },
+            { "title": "Skin in the game (Hög insats)", "desc": "Att våga kasta in ditt EGET ofärdiga utkast och be en panel granska det obarmhärtigt. Det kräver professionellt mod, men det är här magin sker.", "highlight": true }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "lektion-utkast",
+      "section": "case2",
+      "type": "document-mockup",
+      "title": "Den ofärdiga uppgiften",
+      "docTitle": "Övning - olika dieter 8_or.odt",
+      "text": "<h2 style='text-align: center;'>Uppgift ‘Dieter’</h2><p>Du har säkert hört talas om olika metoder för att kontrollera intaget av olika näringsämnen i kroppen. Vi brukar kalla dessa metoder för olika dieter. Om målet är att tappa vikt kallas de ibland för “bantningsmetoder”. Ibland stiftar vi bekantskap med dem som “kostråd för träning” och vid andra tillfällen rekommenderas de som hjälp för vissa kroppsliga åkommor/sjukdomar. Det kan även finnas andra anledningar till varför man väljer att följa någon av dessa dieter.</p><p>(Exempel på olika dieter kan vara tallriksmodellen, LCHF, 5:2, stenålderskost …)</p><p><b>Du skall nu redogöra för dina tankar kring olika dieter. Skriv din text under raden nedan.</b></p><p><i>OBS! Du kan ta hjälp av stödfrågorna nedan men är inte tvungen att använda just dessa frågor i din diskussion.</i></p><ul><li>Är det någon diet (av alla du känner till) som du tror är bättre än någon annan, varför?</li><li>Skulle du rekommendera någon av dessa dieter? Varför?</li><li>Använd din kunskap om olika födoämnen (vad de används till i kroppen, i vilka livsmedel de finns osv) för att diskutera fördelar och nackdelar med olika dieter.</li><li>Finns det någon diet som fungerar bättre för träning, för att tappa vikt eller för att hålla sig frisk?</li><li>Ska man fokusera på att äta mycket fett … eller proteiner … eller proteiner ... ?</li><li>Ska man äta ofta … eller sällan, många kalorier … eller få? osv...</li></ul><p>_____________________________________________________________________________</p><p>Redogör och motivera så utförligt som möjligt, skriv ditt svar här:</p>",
+      "reflection": "Skin in the game i praktiken<br><br>Här är ett faktiskt lektionsutkast från min egen skrivbordslåda.<br><br>Vi låter en expertpanel syna upplägget. Uppdraget: agera obarmhärtiga redaktörer och peka på de pedagogiska brister jag själv har blivit blind för."
+    },
+
+    {
+      "id": "deltagarnas-tur",
+      "section": "case2",
+      "type": "interactive-timer",
+      "title": "Nu är det din tur",
+      "subtitle": "Dags för skarpt läge. Ta fram ett material som du faktiskt arbetar med just nu, till exempel en provfråga, en inlämningsuppgift eller en lektionsplanering. Släpp in panelen. Skin in the game!<br><br><i>Hinner du? Testa gärna att analysera flera olika dokument som du planerar att använda i din undervisning.</i>"
+    },
+    {
+      "id": "stilregler-demo",
+      "section": "bonus",
+      "type": "conversation",
+      "title": "Dual Analysis: Att koda din röst",
+      "messages": [
+        {
+          "role": "user",
+          "text": "Intervjua mig för att skapa en språklig stilguide som fångar hur jag skriver.\n\nDitt uppdrag har TVÅ delar:\n1. FRÅGA MIG om mina skrivpreferenser (deklarerat)\n2. ANALYSERA mina faktiska svar för att hitta mönster (observerat)\n\nIntervjuprocess:\n- Ställ EN fråga i taget.\n- Guiden ska täcka meningslängd, rytm, ordval och *skiljetecken*.\n- Notera eventuella avvikelser mellan vad jag SÄGER att jag gör och vad du OBSERVERAR i mina svar."
+        },
+        {
+          "role": "ai",
+          "text": "Hur skulle du beskriva din typiska meningslängd och struktur?"
+        },
+        {
+          "role": "user",
+          "text": "Jag brukar variera meningslängden för rytm. Korta meningar för betoning. Längre meningar när jag förklarar något komplext och bygger upp mot en poäng."
+        },
+        {
+          "role": "ai",
+          "text": "Vilka skiljetecken använder du oftast, och hur använder du dem?"
+        },
+        {
+          "role": "user",
+          "text": "Jag avskyr tankstreck. De är slappa och förstör den visuella grammatiken. Jag använder parenteser för inskott, eller skriver om meningen så att den klarar sig med kommatecken."
+        },
+        {
+          "role": "ai",
+          "text": "<div style='background: rgba(249, 115, 22, 0.1); border-left: 4px solid var(--accent); padding: 20px; margin: 15px 0; font-family: \"JetBrains Mono\", monospace; font-size: 1.8rem; line-height: 1.6; color: var(--text);'><b style='color: var(--accent)'>🔍 DUAL ANALYSIS COMPLETE</b><br><br><span style='color: #cbd5e1; font-weight: 600;'>• DEKLARERAT:</span> Du säger att du varierar meningslängd.<br><span style='color: #cbd5e1; font-weight: 600;'>• OBSERVERAT:</span> Bekräftat. Dina svar varierade från 8 till 32 ord, med de flesta meningar mellan 12-18 ord.<br><br><span style='color: #cbd5e1; font-weight: 600;'>• DEKLARERAT:</span> Du undviker semikolon.<br><span style='color: #cbd5e1; font-weight: 600;'>• OBSERVERAT:</span> Bekräftat. Noll semikolon användes i dina svar.<br><br><span style='color: #cbd5e1; font-weight: 600;'>• DEKLARERAT:</span> Du avskyr tankstreck.<br><span style='color: #cbd5e1; font-weight: 600;'>• OBSERVERAT:</span> Bekräftat. Noll tankstreck påträffades. Du valde istället formella kommatecken och korta, avklippta meningar för rytm.</div>\nDin 'fingeravtrycksprofil' är nu upprättad. Ska jag spökskriva dina framtida texter nu?"
+        },
+        {
+          "role": "user",
+          "text": "Absolut inte, jag är Dirigenten. Du får mina utkast och använder profilen för att ge mig alternativa formuleringar som tvingar mig att skriva skarpare. Du skriver aldrig *åt* mig."
+        },
+        {
+          "role": "ai",
+          "text": "Uppfattat! Jag agerar från och med nu uteslutande som din skoningslösa språkliga sparringpartner."
+        }
+      ]
+    }
+  ]
+}

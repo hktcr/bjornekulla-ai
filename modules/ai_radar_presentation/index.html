@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI & RISKER: TIDSLINJE-VISUALISERING</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,700;1,400&family=Outfit:wght@800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+    .blip { position: relative; }
+    .blip[data-tooltip]:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.92);
+      color: #0f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 6px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      z-index: 9999;
+      pointer-events: none;
+      border: 1px solid rgba(0,255,0,0.3);
+    }
+    </style>
+</head>
+<body class="theme-light">
+    
+    <div class="app-container">
+        <!-- Visualization Area (holds either timeline or radar) -->
+        <div class="visualization-section" id="visSection">
+            
+            <!-- TIMELINE MODE -->
+            <div class="timeline-system" id="timelineSystem" style="display:none;">
+                <div class="timeline-track-container">
+                    <div class="timeline-track" id="timelineTrack">
+                        <div id="timeline-targets"></div>
+                    </div>
+                </div>
+                <div class="playhead" id="playhead"></div>
+            </div>
+
+            <!-- RADAR MODE -->
+            <div class="radar-system" id="radarSystem" style="display:none;">
+                <div class="radar-grid"></div>
+                <div class="radar-sweep" id="radarSweep"></div>
+                <div id="radar-targets-layer"></div>
+                <div class="season-marker" style="top: -20px; left: 50%; transform: translateX(-50%);">[ JAN ]</div>
+                <div class="season-marker" style="top: 50%; right: -30px; transform: translateY(-50%);">[ APR ]</div>
+                <div class="season-marker" style="bottom: -20px; left: 50%; transform: translateX(-50%);">[ JUL ]</div>
+                <div class="season-marker" style="top: 50%; left: -30px; transform: translateY(-50%);">[ OKT ]</div>
+            </div>
+            
+            <!-- Presentation Cover Slide -->
+            <div id="coverSlide" class="presentation-cover visible">
+                <div class="cover-content">
+                    <div class="cover-subtitle">> FAMILJEN HELSINGBORG | 24 APRIL 2026</div>
+                    <h1 class="cover-title">AI-kapplöpningen<br><span style="font-size:0.5em;font-weight:400;">Händelser, genombrott och risker 2022–2026</span></h1>
+                    
+                    <div class="typewriter-wrapper">
+                        <div id="typewriterText" class="typewriter-text"></div>
+                    </div>
+                    
+                    <div class="cover-actions" id="layoutGroup">
+                        <button class="launch-system-btn" data-value="radar">[ INITIERA RADAR-SWEEP ]</button>
+                        <button class="launch-system-btn secondary" data-value="timeline" style="background:transparent; border:1px solid var(--radar-green); color:var(--text-main);">[ ÖPPNA LINJÄR TIDSLINJE ]</button>
+                        <button class="launch-system-btn secondary" data-value="chart" style="background:transparent; border:1px solid var(--radar-green); color:var(--text-main); margin-top:10px;">[ ÖPPNA ANALYSDIAGRAM ]</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHART MODE -->
+            <div class="chart-system" id="chartSystem" style="display:none; width:100%; height:100%; position:relative; overflow:hidden; background:var(--bg-dark);">
+                <div id="chart-viewport" style="width:100%; height:100%; position:absolute; transform-origin: 0 0; cursor: grab;">
+                    <!-- Grid Lines and Labels will be generated here -->
+                    <div id="chart-targets-layer" style="width:100%; height:100%; position:absolute; top:0; left:0;"></div>
+                </div>
+            </div>
+
+            <!-- Slide Lightbox -->
+            <div id="slideLightbox" class="slide-lightbox">
+                <button id="lightboxClose" class="lightbox-close">[ STÄNG ]</button>
+                <div id="lightboxContent" class="lightbox-content"></div>
+            </div>
+
+            <!-- Event Popup Modal -->
+            <div id="eventModal" class="event-modal">
+                <div class="modal-header" id="modalHeader">> NY ANOMALI DETEKTERAD</div>
+                <div class="modal-title" id="modalTitle">Title</div>
+                <div class="modal-desc" id="modalDesc">Description</div>
+                <div class="modal-source" id="modalSource" style="display:none; margin-top:1rem; font-size: 0.8rem; text-align: left; word-break: break-all;"></div>
+                <button class="modal-close" id="modalCloseBtn" style="display:none; margin-top:1rem;">[ X BEKRÄFTA & FORTSÄTT ]</button>
+                <div class="modal-countdown" id="modalCountdown" style="display:none;"></div>
+            </div>
+            
+            <!-- Floating Left Controls -->
+            <div class="filter-controls">
+                <div class="filter-menu">
+                    <button class="filter-btn filter-menu-btn" id="filterMenuBtn">[ FILTRERA DATA ▼ ]</button>
+                    <div class="filter-dropdown" id="filterDropdown" style="display: none;">
+                        <label><input type="checkbox" id="chk-mojlighet" checked> [ MÖJLIGHETER ]</label>
+                        <label><input type="checkbox" id="chk-nackdel" checked> [ NACKDELAR ]</label>
+                        <label><input type="checkbox" id="chk-risk" checked> [ FATALA RISKER ]</label>
+                        <hr style="border-color: rgba(255,255,255,0.1); margin: 0.5rem 0;">
+                        <label style="color: var(--nackdel-color);"><input type="checkbox" id="chk-barn"> [ ENDAST BARN/UTBILDNING ]</label>
+                    </div>
+                </div>
+                <button class="filter-btn active mode-btn" data-filter="all">[ RESET: STATISK VY ]</button>
+            </div>
+            
+            <div class="sim-controls">
+                <button class="sim-btn play" id="btnPlay">[ ▶ STARTA SIMULERING ]</button>
+                <button class="sim-btn stop" id="btnStop">[ ◼ AVBRYT ]</button>
+                <button class="sim-btn audio" id="btnAudio">[ 🔇 LJUD AV ]</button>
+                <div class="speed-control">
+                    <label for="speedSlider">[ UPPSPELNINGSHASTIGHET ]</label>
+                    <input type="range" id="speedSlider" min="0.05" max="3.0" step="0.05" value="0.25">
+                </div>
+                <div style="margin-top: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
+                    <label style="color:var(--text-main); font-size:0.8rem; display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-family:'JetBrains Mono', monospace;">
+                        <input type="radio" name="pauseMode" id="modeAuto" value="auto" checked style="accent-color:var(--radar-green); transform:scale(1.2);"> [ AUTO-PAUS (8s) ]
+                    </label>
+                    <label style="color:var(--text-main); font-size:0.8rem; display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-family:'JetBrains Mono', monospace;">
+                        <input type="radio" name="pauseMode" id="modeManual" value="manual" style="accent-color:var(--radar-green); transform:scale(1.2);"> [ MANUELL PAUS (Klick) ]
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Right: Heads Up Display -->
+        <div class="hud-section" id="hudSection" style="display:none;">
+            <div class="hud-topline">
+                <div id="activeModeText">[ TIDSLINJE-KLIENT LADDAD ]</div>
+                <div id="simYearIndicator">SEKTOR: GLOBAL AI</div>
+            </div>
+            
+            <h1 class="hud-title">AI: FÖRMÅGOR &<br>FATALA RISKER</h1>
+            <div class="stat-row">
+                <span class="stat-label">HÄNDELSER DETEKTERADE:</span>
+                <span class="stat-value" id="totalValue">000</span>
+            </div>
+            
+            <div id="target-details" class="target-details terminal-log">
+                <div class="idle-text">> VÄNTAR PÅ ATT SIMULERING SKA STARTA... (KLICKA PLAY)</div>
+                <div id="logContent"></div>
+            </div>
+            
+            <div class="hud-footer" id="hudFooterText">
+                > PROGRESSIVT FLÖDE (2022 - 2026)<br>
+                > ALLA INCIDENTER LOGGAS
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script>
+        // DOM Elements
+        const totalValueEl = document.getElementById('totalValue');
+        const simYearIndicator = document.getElementById('simYearIndicator');
+        const logContent = document.getElementById('logContent');
+        const terminalLog = document.getElementById('target-details');
+        const timelineTrack = document.getElementById('timelineTrack');
+        const radarSweep = document.getElementById('radarSweep');
+        
+        let containerTimeline = document.getElementById('timeline-targets');
+        let containerRadar = document.getElementById('radar-targets-layer');
+        let activeContainer = containerTimeline;
+        
+        // System State
+        let currentLayout = 'timeline'; // 'timeline' or 'radar'
+        let currentTheme = 'light';
+        
+        let simActive = false;
+        let simPaused = false;
+        let simYear = 2022;
+        
+        // Mode specific vars
+        let currentVwPos = 60; // Timeline (start in mid-2022 to skip empty window)
+        let simAngle = 0; // Radar
+        
+        let globalHitCount = 0;
+        let audioEnabled = false;
+        let audioCtx;
+        
+        const minYear = 2022, maxYear = 2026;
+        const VW_PER_YEAR = 100;
+        const minRadius = 10, maxRadius = 45;
+
+        // Startup Logic
+        const typeWriterElement = document.getElementById('typewriterText');
+        const quoteText = '"Vi står inför ett kognitivt skifte, inte ett tekniskt..."';
+        let typeIndex = 0;
+        
+        function typeWriter() {
+            if (typeIndex < quoteText.length) {
+                typeWriterElement.innerHTML += quoteText.charAt(typeIndex);
+                typeIndex++;
+                setTimeout(typeWriter, 50);
+            } else {
+                typeWriterElement.classList.add('typing');
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(typeWriter, 800);
+        });
+
+        document.querySelectorAll('#layoutGroup .launch-system-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                currentLayout = e.target.dataset.value;
+                
+                // Apply Layout
+                if (currentLayout === 'timeline') {
+                    document.getElementById('timelineSystem').style.display = 'flex';
+                    document.getElementById('radarSystem').style.display = 'none';
+                    document.getElementById('chartSystem').style.display = 'none';
+                    activeContainer = containerTimeline;
+                    document.getElementById('activeModeText').innerText = '[ TIDSLINJE-LÄGE AKTIVT ]';
+                    document.getElementById('hudFooterText').innerHTML = '> PROGRESSIV TIDSLINJE (2022 - 2026)<br>> ALLA INCIDENTER LOGGAS';
+                } else if (currentLayout === 'radar') {
+                    document.getElementById('timelineSystem').style.display = 'none';
+                    document.getElementById('radarSystem').style.display = 'block';
+                    document.getElementById('chartSystem').style.display = 'none';
+                    activeContainer = containerRadar;
+                    document.getElementById('activeModeText').innerText = '[ CIRKULÄR RADAR AKTIV ]';
+                    document.getElementById('hudFooterText').innerHTML = '> KRONOLOGISK SWEEP (2022 - 2026)<br>> 1 FULL ROTATION = 1 ÅR';
+                } else if (currentLayout === 'chart') {
+                    document.getElementById('timelineSystem').style.display = 'none';
+                    document.getElementById('radarSystem').style.display = 'none';
+                    document.getElementById('chartSystem').style.display = 'block';
+                    activeContainer = document.getElementById('chart-targets-layer');
+                    document.getElementById('activeModeText').innerText = '[ ANALYSDIAGRAM AKTIVT ]';
+                    document.getElementById('hudFooterText').innerHTML = '> KATEGORISK ANALYS (2022 - 2026)<br>> KLICKA PÅ NODER FÖR DETALJER';
+                }
+                
+                // Hide Cover, Show HUD
+                document.getElementById('coverSlide').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('coverSlide').style.display = 'none';
+                }, 1000);
+                document.getElementById('hudSection').style.display = 'flex';
+                
+                if (currentLayout === 'chart') {
+                    document.querySelector('.sim-controls').style.display = 'none';
+                    document.getElementById('hudSection').style.display = 'none'; // Give more room for chart
+                }
+                
+                renderFullGrid(); // Setup static grid
+                if (currentLayout === 'chart') drawChartAxes();
+            });
+        });
+
+        function getAudioContext() {
+            if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            return audioCtx;
+        }
+
+        function playPing(isRare) {
+            if(!audioEnabled) return;
+            const ctx = getAudioContext();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            if (isRare) {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.8);
+            } else {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.1);
+            }
+        }
+
+        function getAngle(dateStr) {
+            let m = 0, d = 15; 
+            let str = dateStr.toLowerCase();
+            if (str.includes("jan")) m = 0;
+            else if (str.includes("feb")) m = 1;
+            else if (str.includes("mar")) m = 2;
+            else if (str.includes("apr")) m = 3;
+            else if (str.includes("maj") || str.includes("may")) m = 4;
+            else if (str.includes("jun")) m = 5;
+            else if (str.includes("jul")) m = 6;
+            else if (str.includes("aug")) m = 7;
+            else if (str.includes("sep")) m = 8;
+            else if (str.includes("okt") || str.includes("oct")) m = 9;
+            else if (str.includes("nov")) m = 10;
+            else if (str.includes("dec")) m = 11;
+            else if (str.includes("höst")) { m = 8; d = 15; } 
+            else if (str.includes("vår")) { m = 3; d = 15; } 
+            
+            let match = str.match(/(\d{1,2})\s/);
+            if (match) d = parseInt(match[1]);
+            let dayOfYear = (m * 30.4) + d;
+            return (dayOfYear / 365) * 360; 
+        }
+
+        // Common Data Prep
+        timelineData.forEach(s => {
+            s.angle = getAngle(s.date);
+            s.floatYear = s.year + (s.angle / 360);
+            s.vwPos = (s.floatYear - minYear) * VW_PER_YEAR;
+            s.hit = false;
+            // Map impact to legacy blip type classes
+            if (s.impact === 'critical') s.type = 'risk';
+            else if (s.impact === 'negative') s.type = 'nackdel';
+            else s.type = 'mojlighet';
+        });
+        timelineData.sort((a, b) => a.vwPos - b.vwPos);
+
+        let activeFilters = { 'positive': true, 'negative': true, 'critical': true, 'barn_only': false };
+        let popupTimeout = null;
+
+        function updateTimelinePlayhead() {
+            timelineTrack.style.transform = `translateX(calc(50vw - ${currentVwPos}vw))`;
+        }
+
+        function engineLoop() {
+            if (simActive && !simPaused) {
+                let speed = parseFloat(document.getElementById('speedSlider').value);
+                let hits = [];
+                
+                if (currentLayout === 'timeline') {
+                    let dt = speed * 0.15;
+                    let prevVwPos = currentVwPos;
+                    currentVwPos += dt;
+                    let endVwPos = (maxYear - minYear + 1) * VW_PER_YEAR;
+                    
+                    if (currentVwPos > endVwPos) {
+                        finishSimulation();
+                    } else {
+                        updateTimelinePlayhead();
+                        let activeYear = minYear + Math.floor(Math.max(0, currentVwPos) / VW_PER_YEAR);
+                        if (activeYear <= maxYear) simYearIndicator.innerText = `[ KRONOLOGI | ÅR ${activeYear} ]`;
+
+                        hits = timelineData.filter(s => !s.hit && (activeFilters[s.impact] !== undefined ? activeFilters[s.impact] : true) && (!activeFilters['barn_only'] || (s.tags && s.tags.includes('education'))) && s.vwPos > prevVwPos && s.vwPos <= currentVwPos);
+                        
+                        if (hits.length > 0) {
+                            currentVwPos = hits[0].vwPos; // stick to target
+                            updateTimelinePlayhead();
+                        }
+                    }
+                } else if (currentLayout === 'radar') {
+                    let radarSpeedFactor = speed * 4.0; // scale radar speed
+                    let prevAngle = simAngle;
+                    simAngle += radarSpeedFactor;
+                    
+                    if (simAngle >= 360) {
+                        simAngle = simAngle % 360;
+                        simYear++;
+                        simYearIndicator.innerText = `[ SÖKER SEKTOR | ÅR ${simYear} ]`;
+                        prevAngle -= 360; 
+                    }
+                    radarSweep.style.transform = `rotate(${simAngle}deg)`;
+
+                    if (simYear > maxYear) {
+                        finishSimulation();
+                    } else {
+                        hits = timelineData.filter(s => {
+                            if (s.year === simYear && !s.hit && (activeFilters[s.impact] !== undefined ? activeFilters[s.impact] : true) && (!activeFilters['barn_only'] || (s.tags && s.tags.includes('education')))) {
+                                if (s.angle > prevAngle && s.angle <= simAngle) return true;
+                            }
+                            return false;
+                        });
+                    }
+                }
+
+                if (hits.length > 0) {
+                    let target = hits[0]; // Process one hit at a time if clustered
+                    target.hit = true;
+                    processTargetHit(target);
+                    simPaused = true;
+                    document.getElementById('btnPlay').innerText = "[ ▶ ÅTERUPPTA ]";
+                    showModal(target);
+                }
+            }
+            requestAnimationFrame(engineLoop);
+        }
+
+        requestAnimationFrame(engineLoop);
+        
+        function logToTerminal(htmlStr) {
+            const idleText = terminalLog.querySelector('.idle-text');
+            if(idleText) idleText.remove();
+            logContent.innerHTML += htmlStr;
+            terminalLog.scrollTop = terminalLog.scrollHeight;
+        }
+
+        function finishSimulation() {
+            logToTerminal(`\n> ... SYSTEMFLÖDE AVSLUTAT NÅTT NUTID [2022-2026].`);
+            simYearIndicator.innerText = "SEKTOR: ÖVERSIKT";
+            simActive = false;
+            document.getElementById('btnPlay').innerText = "[ ▶ STARTA OM ]";
+        }
+
+        function processTargetHit(s) {
+            globalHitCount++;
+            totalValueEl.innerText = globalHitCount.toString().padStart(3, '0');
+
+            const isRare = s.impact === 'critical' || s.impact === 'negative';
+            
+            const targetEl = activeContainer.querySelector(`.blip[data-id='${s.id}']`);
+            if (targetEl) {
+                targetEl.classList.add('flash');
+                setTimeout(() => targetEl.classList.remove('flash'), 500);
+            }
+            
+            playPing(isRare);
+            printTargetDetailBlock(s, false);
+        }
+
+        function showModal(target) {
+            const modal = document.getElementById('eventModal');
+            document.getElementById('modalTitle').innerText = target.art;
+            document.getElementById('modalDesc').innerText = `[ ${target.datum.toUpperCase()} ]\n\n${target.kommentar}`;
+            
+            const sourceDiv = document.getElementById('modalSource');
+            if (target.url) {
+                sourceDiv.innerHTML = `> KÄLLA: <a href="${target.url}" target="_blank" style="color:var(--text-main); text-decoration:underline;">Extern länk</a>`;
+                sourceDiv.style.display = 'block';
+            } else {
+                sourceDiv.style.display = 'none';
+            }
+
+            const header = document.getElementById('modalHeader');
+            const btnClose = document.getElementById('modalCloseBtn');
+            const countdown = document.getElementById('modalCountdown');
+            
+            modal.className = 'event-modal'; 
+            if (target.type === 'risk') {
+               modal.classList.add('risk');
+               header.innerText = '> ! FATAL RISK DETECTED !';
+               header.style.color = "var(--nocmig-color)";
+            } else if (target.type === 'nackdel') {
+               modal.classList.add('nackdel');
+               header.innerText = '> ! KRITISK NACKDEL DETEKTERAD !';
+               header.style.color = "var(--nackdel-color)";
+            } else {
+               header.innerText = '> MÖJLIGHET REGISTRERAD';
+               header.style.color = "var(--radar-green)";
+            }
+            
+            modal.classList.add('visible');
+            const pauseMode = document.querySelector('input[name="pauseMode"]:checked').value;
+            
+            if (pauseMode === 'manual') {
+                btnClose.style.display = 'inline-block';
+                countdown.style.display = 'none';
+                btnClose.onclick = () => {
+                    modal.classList.remove('visible');
+                    simPaused = false;
+                    document.getElementById('btnPlay').innerText = "[ || PAUSA ]";
+                };
+            } else {
+                btnClose.style.display = 'none';
+                countdown.style.display = 'block';
+                countdown.style.transition = 'none';
+                countdown.style.width = '100%';
+                void countdown.offsetWidth; // Reflow
+                
+                countdown.style.transition = 'width 8s linear';
+                countdown.style.width = '0%';
+                
+                clearTimeout(popupTimeout);
+                popupTimeout = setTimeout(() => {
+                    if (simPaused && modal.classList.contains('visible')) {
+                        modal.classList.remove('visible');
+                        simPaused = false;
+                        document.getElementById('btnPlay').innerText = "[ || PAUSA ]";
+                    }
+                }, 8000);
+            }
+        }
+
+        function printTargetDetailBlock(s, isManual = false) {
+            let color = "var(--radar-green)";
+            let signalText = "MÖJLIGHET REGISTRERAD";
+            let warningClass = "";
+            let borderColor = "var(--radar-green)";
+            
+            if (s.impact === 'critical') {
+                color = "var(--nocmig-color)";
+                signalText = "! FATAL RISK DETECTED !";
+                warningClass = "warning";
+                borderColor = "var(--nocmig-color)";
+            } else if (s.impact === 'negative') {
+                color = "var(--nackdel-color)";
+                signalText = "! KRITISK NACKDEL DETEKTERAD !";
+                borderColor = "var(--nackdel-color)";
+            }
+
+            let modeTag = isManual ? "[MANUELL INMATNING]" : `[${s.date.toUpperCase()}]`;
+
+            let html = `
+                <div style="border-left: 2px solid ${borderColor}; padding-left: 10px; margin-top: 15px; margin-bottom: 5px; animation: blip-flash 0.5s ease-out;">
+                    <span style="color:${color}; font-weight:bold;" class="${warningClass}">> ${signalText} ${modeTag}</span><br>
+                    > MÅL: <span class="highlight" style="font-size: 1.1em;">${s.title.toUpperCase()}</span><br>
+                    > INFO: <span style="color:${color};">"${s.description}"</span>
+                </div>
+            `;
+            logToTerminal(html);
+            terminalLog.scrollTop = terminalLog.scrollHeight;
+        }
+
+        function appendTarget(s, highlightInLog = false) {
+            const targetEl = document.createElement('div');
+            targetEl.className = `blip blip-${s.type}`;
+            targetEl.dataset.id = s.id;
+            targetEl.dataset.tooltip = `${s.date} · ${s.title}`;
+
+            if (currentLayout === 'timeline') {
+                targetEl.style.left = `${s.vwPos}vw`;
+            } else if (currentLayout === 'radar') {
+                let totalYears = maxYear - minYear + 1;
+                let exactYearFraction = (s.year - minYear) + (s.angle / 360);
+                let radiusPercent = minRadius + (exactYearFraction / totalYears) * (maxRadius - minRadius);
+                const angleRad = (s.angle - 90) * (Math.PI / 180);
+                const x = 50 + (radiusPercent * Math.cos(angleRad));
+                const y = 50 + (radiusPercent * Math.sin(angleRad));
+                targetEl.style.left = `${x}%`;
+                targetEl.style.top = `${y}%`;
+            } else if (currentLayout === 'chart') {
+                let xPercent = ((s.floatYear - minYear) / (maxYear - minYear + 1)) * 90 + 5;
+                
+                // Distribute on Y-axis based on impact category
+                let yPercent;
+                if (s.impact === 'critical') {
+                    yPercent = 15 + (Math.random() - 0.5) * 15; // Top band
+                } else if (s.impact === 'negative') {
+                    yPercent = 40 + (Math.random() - 0.5) * 15; // Middle band
+                } else {
+                    yPercent = 65 + (Math.random() - 0.5) * 15; // Bottom band
+                }
+                
+                // Small x jitter to separate overlapping dates
+                xPercent += (Math.random() - 0.5) * 2;
+                
+                targetEl.style.left = `${xPercent}%`;
+                targetEl.style.top = `${yPercent}%`;
+                
+                // Use lightbox for chart mode instead of default modal
+                targetEl.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openLightbox(s);
+                });
+            }
+
+            if (currentLayout !== 'chart') {
+                targetEl.addEventListener('mouseenter', () => selectTarget(s));
+            }
+            
+            activeContainer.appendChild(targetEl);
+
+            if (highlightInLog) targetEl.classList.add('flash');
+            setTimeout(() => targetEl.classList.remove('flash'), 500);
+        }
+
+        function drawYearRings() {
+            document.querySelectorAll('.year-ring-label').forEach(el => el.remove());
+            document.querySelectorAll('.year-line').forEach(el => el.remove());
+            
+            if (currentLayout === 'timeline') {
+                for (let y = minYear; y <= maxYear + 1; y++) {
+                    let yPos = (y - minYear) * VW_PER_YEAR;
+                    let label = document.createElement('div');
+                    label.className = 'year-ring-label';
+                    label.innerText = `[ ${y} ]`;
+                    label.style.left = `${yPos}vw`;
+                    activeContainer.appendChild(label);
+                    
+                    let line = document.createElement('div');
+                    line.className = 'year-line';
+                    line.style.position = 'absolute';
+                    line.style.left = `${yPos}vw`;
+                    line.style.top = '-100px';
+                    line.style.bottom = '-100px';
+                    line.style.width = '1px';
+                    line.style.background = 'var(--radar-dim)';
+                    line.style.zIndex = '0';
+                    activeContainer.appendChild(line);
+                }
+            } else if (currentLayout === 'radar') {
+                let step = 1;
+                let totalYears = maxYear - minYear + 1;
+                for (let y = minYear; y <= maxYear; y += step) {
+                    let radiusPercent = minRadius + ((y - minYear) / totalYears) * (maxRadius - minRadius);
+                    let label = document.createElement('div');
+                    label.className = 'year-ring-label';
+                    label.innerText = y;
+                    // Place along the left ray (9 o'clock direction)
+                    label.style.top = '50%';
+                    label.style.left = `${50 - radiusPercent}%`;
+                    label.style.transform = 'translate(-50%, -50%)';
+                    label.style.fontSize = '0.7rem';
+                    label.style.opacity = '0.5';
+                    activeContainer.appendChild(label);
+                }
+            }
+        }
+
+        function renderFullGrid() {
+            simActive = false;
+            simPaused = false;
+            simYear = minYear;
+            currentVwPos = 60; // Start offset to skip empty early 2022
+            simAngle = 0;
+            
+            if (currentLayout === 'timeline') updateTimelinePlayhead();
+            if (currentLayout === 'radar') radarSweep.style.transform = `rotate(0deg)`;
+            
+            document.getElementById('btnPlay').innerText = "[ ▶ STARTA SIMULERING ]";
+            activeContainer.innerHTML = '';
+            logContent.innerHTML = '<div class="idle-text">> KLAR FÖR SIMULERING OCH MÅLLÅSNING... (KLICKA PLAY)</div>';
+            simYearIndicator.innerText = "SEKTOR: ÖVERSIKT";
+
+            drawYearRings();
+
+            let visibleCount = 0;
+            timelineData.forEach((s) => {
+                s.hit = true;
+                if((activeFilters[s.impact] !== undefined ? activeFilters[s.impact] : true) && (!activeFilters['barn_only'] || (s.tags && s.tags.includes('education')))) {
+                    appendTarget(s);
+                    visibleCount++;
+                }
+            });
+            totalValueEl.innerText = visibleCount.toString().padStart(3, '0');
+        }
+
+        function toggleSimulation() {
+            if ((currentLayout === 'timeline' && currentVwPos >= ((maxYear - minYear + 1) * VW_PER_YEAR)) || 
+                (currentLayout === 'radar' && simYear > maxYear) ||
+                (!simPaused && !simActive && ((currentLayout === 'timeline' && currentVwPos === 60) || (currentLayout==='radar' && simAngle === 0)))) {
+                
+                simActive = true;
+                simPaused = false;
+                simYear = minYear;
+                currentVwPos = 60; 
+                simAngle = 0;
+                globalHitCount = 0;
+                timelineData.forEach(s => s.hit = false);
+                
+                activeContainer.innerHTML = '';
+                logContent.innerHTML = '';
+                
+                drawYearRings();
+                
+                // Spawn targets on track so they are visible on the horizon
+                timelineData.forEach((s) => {
+                    if((activeFilters[s.impact] !== undefined ? activeFilters[s.impact] : true) && (!activeFilters['barn_only'] || (s.tags && s.tags.includes('education')))) appendTarget(s, false);
+                });
+                
+                if (currentLayout === 'timeline') updateTimelinePlayhead();
+                
+                if(audioEnabled && !audioCtx) getAudioContext().resume();
+                logToTerminal(`> INITIERAR KRONOLOGISK AVSÖKNING...`);
+                simYearIndicator.innerText = `[ STARTAR SYSTEM... ]`;
+                document.getElementById('btnPlay').innerText = "[ || PAUSA ]";
+            } else if (simActive) {
+                simActive = false;
+                simPaused = true;
+                document.getElementById('btnPlay').innerText = "[ ▶ ÅTERUPPTA ]";
+            } else if (simPaused) {
+                simActive = true;
+                simPaused = false;
+                clearTimeout(popupTimeout);
+                document.getElementById('eventModal').classList.remove('visible');
+                if(audioEnabled && !audioCtx) getAudioContext().resume();
+                document.getElementById('btnPlay').innerText = "[ || PAUSA ]";
+            }
+        }
+
+        function selectTarget(s) {
+            if(simActive) return;
+            printTargetDetailBlock(s, true);
+            document.querySelectorAll('.blip').forEach(b => b.classList.remove('active'));
+            const activeBlip = document.querySelector(`.blip[data-id='${s.id}']`);
+            if (activeBlip) activeBlip.classList.add('active');
+        }
+
+        // Base Interactivity
+        document.getElementById('btnAudio').addEventListener('click', (e) => {
+            audioEnabled = !audioEnabled;
+            if(audioEnabled) {
+                getAudioContext().resume();
+                e.target.innerText = "[ 🔊 LJUD PÅ ]";
+                e.target.style.color = "var(--radar-green)";
+            } else {
+                e.target.innerText = "[ 🔇 LJUD AV ]";
+                e.target.style.color = "var(--text-main)";
+            }
+        });
+
+        document.getElementById('btnPlay').addEventListener('click', () => { toggleSimulation(); });
+        document.getElementById('btnStop').addEventListener('click', () => { renderFullGrid(); });
+        document.querySelector('.mode-btn').addEventListener('click', () => { renderFullGrid(); });
+        document.getElementById('filterMenuBtn').addEventListener('click', () => {
+            const dropdown = document.getElementById('filterDropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'flex' : 'none';
+        });
+
+        ['mojlighet', 'nackdel', 'risk'].forEach(type => {
+            document.getElementById(`chk-${type}`).addEventListener('change', (e) => {
+                activeFilters[type] = e.target.checked;
+                if (!simActive) renderFullGrid();
+            });
+        });
+        
+        document.getElementById('chk-barn').addEventListener('change', (e) => {
+            activeFilters['barn_only'] = e.target.checked;
+            if (!simActive) renderFullGrid();
+        });
+
+        function drawChartAxes() {
+            document.querySelectorAll('.chart-line').forEach(el => el.remove());
+            document.querySelectorAll('.chart-label').forEach(el => el.remove());
+            document.querySelectorAll('.chart-legend').forEach(el => el.remove());
+            
+            // Draw horizontal reference lines (grid)
+            [15, 40, 65].forEach(yPos => {
+                let hLine = document.createElement('div');
+                hLine.className = 'chart-line chart-y-line';
+                hLine.style.cssText = `left:5%;right:5%;top:${yPos}%;height:1px;background:rgba(0,0,0,0.03);position:absolute;z-index:0;border-top:1px dashed var(--radar-faint);`;
+                activeContainer.appendChild(hLine);
+            });
+            
+            // Draw main X-axis base line
+            let baseLine = document.createElement('div');
+            baseLine.className = 'chart-line chart-base-line';
+            baseLine.style.cssText = `left:5%;right:5%;bottom:70px;height:1px;background:var(--radar-dim);position:absolute;z-index:0;`;
+            activeContainer.appendChild(baseLine);
+            
+            for (let y = minYear; y <= maxYear; y++) {
+                let xPercent = ((y - minYear) / (maxYear - minYear + 1)) * 90 + 5;
+                let label = document.createElement('div');
+                label.className = 'chart-label chart-x-label';
+                label.innerText = y;
+                label.style.cssText = `left:${xPercent}%;bottom:48px;position:absolute;color:var(--text-main);transform:translateX(-50%);font-size:0.95rem;font-weight:bold;font-family:'JetBrains Mono',monospace;opacity:0.8;`;
+                activeContainer.appendChild(label);
+                
+                let line = document.createElement('div');
+                line.className = 'chart-line chart-x-line';
+                line.style.cssText = `left:${xPercent}%;top:0;bottom:70px;width:1px;background:var(--radar-faint);position:absolute;z-index:0;`;
+                activeContainer.appendChild(line);
+            }
+            
+            let legend = document.createElement('div');
+            legend.className = 'chart-legend';
+            legend.style.cssText = 'position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;gap:24px;font-family:"JetBrains Mono",monospace;font-size:0.85rem;z-index:20;background:var(--bg-card);padding:12px 28px;border-radius:30px;border:1px solid rgba(0,0,0,0.05);box-shadow:var(--shadow);';
+            legend.innerHTML = '<span style="display:flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:50%;background:var(--radar-green);display:inline-block;box-shadow:0 0 8px var(--radar-green);"></span><span style="color:var(--text-main);font-weight:600;">Möjlighet / Lansering</span></span><span style="display:flex;align-items:center;gap:8px;"><span style="width:12px;height:12px;border-radius:2px;background:var(--nackdel-faint);border:1px solid var(--nackdel-color);display:inline-block;"></span><span style="color:var(--nackdel-color);font-weight:600;">Nackdel / Sårbarhet</span></span><span style="display:flex;align-items:center;gap:8px;"><span style="width:14px;height:14px;border-radius:0;background:var(--nocmig-faint);border:2px solid var(--nocmig-color);display:inline-block;"></span><span style="color:var(--nocmig-color);font-weight:800;">Fatal risk</span></span>';
+            activeContainer.appendChild(legend);
+        }
+
+        function openLightbox(target) {
+            const lightbox = document.getElementById('slideLightbox');
+            const content = document.getElementById('lightboxContent');
+            
+            let color = 'var(--radar-green)';
+            if (target.impact === 'critical') color = 'var(--nocmig-color)';
+            else if (target.impact === 'negative') color = 'var(--nackdel-color)';
+            
+            let html = `<h2 style="color:${color};font-size:2.2rem;margin-bottom:12px;line-height:1.2;">${target.title}</h2>
+                        <div style="font-size: 1.05rem; color: var(--radar-dim); margin-bottom:28px; display:flex; gap:16px; font-family:'JetBrains Mono',monospace;">
+                            <span>[ ${target.date.toUpperCase()} ]</span>
+                            <span style="color:${color}; font-weight:600;">${target.category.toUpperCase()}</span>
+                        </div>`;
+            
+            if (target.category === 'Reflektion') {
+                html += `<div style="font-size:1.4rem; font-style:italic; line-height:1.6; color:var(--text-main); border-left:4px solid ${color}; padding-left:24px; margin:24px 0; background:rgba(0,0,0,0.02); padding-top:20px; padding-bottom:20px; border-radius:0 12px 12px 0;">${target.description}</div>`;
+            } else {
+                html += `<p style="font-size:1.2rem; line-height:1.7; color:var(--text-main);">${target.description}</p>`;
+            }
+            
+            if (target.url) {
+                html += `<div style="margin-top:48px; margin-bottom: 12px;"><a href="${target.url}" target="_blank" style="display:inline-block; padding:14px 32px; background:${color}; color:#fff; text-decoration:none; border-radius:30px; font-weight:700; font-size:1rem; letter-spacing:0.05em; transition:all 0.2s ease; box-shadow:0 4px 15px rgba(0,0,0,0.15);">ÖPPNA EXTERN KÄLLA &rarr;</a></div>`;
+            }
+            
+            content.innerHTML = html;
+            lightbox.classList.add('visible');
+        }
+
+        document.getElementById('lightboxClose').addEventListener('click', () => {
+            document.getElementById('slideLightbox').classList.remove('visible');
+        });
+
+        // Pan and Zoom logic for chart system
+        const chartSys = document.getElementById('chartSystem');
+        const chartViewport = document.getElementById('chart-viewport');
+        let chartScale = 1;
+        let chartPanX = 0;
+        let chartPanY = 0;
+        let isChartPanning = false;
+        let chartStartX = 0;
+        let chartStartY = 0;
+
+        chartSys.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            chartScale += e.deltaY * -0.002;
+            chartScale = Math.min(Math.max(0.5, chartScale), 5); // limit scale 0.5x to 5x
+            applyChartTransform();
+        });
+
+        chartSys.addEventListener('mousedown', (e) => {
+            isChartPanning = true;
+            chartStartX = e.clientX - chartPanX;
+            chartStartY = e.clientY - chartPanY;
+            chartViewport.style.cursor = 'grabbing';
+        });
+
+        chartSys.addEventListener('mousemove', (e) => {
+            if(!isChartPanning) return;
+            chartPanX = e.clientX - chartStartX;
+            chartPanY = e.clientY - chartStartY;
+            applyChartTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            isChartPanning = false;
+            chartViewport.style.cursor = 'grab';
+        });
+
+        function applyChartTransform() {
+            chartViewport.style.transform = `translate(${chartPanX}px, ${chartPanY}px) scale(${chartScale})`;
+        }
+        
+        // Reset pan/zoom when changing layouts
+        document.querySelectorAll('#layoutGroup .launch-system-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                chartScale = 1;
+                chartPanX = 0;
+                chartPanY = 0;
+                applyChartTransform();
+            });
+        });
+    </script>
+</body>
+</html>

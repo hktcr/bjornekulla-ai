@@ -1,0 +1,2906 @@
+<!DOCTYPE html>
+<html lang="sv">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Workshop Björnekullaskolan</title>
+    <meta name="description" content="Workshop om AI för Björnekullaskolan, 28 april 2026">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Bakgrundsfärger - ändra här för att byta tema */
+            --bg: #0f172a;          /* Djup gryningsblå (slate-900) */
+            --surface: #1e293b;     /* Ytor (slate-800) */
+            --card-bg: #1e293b;     /* Kortens bakgrund */
+            --card-bg-hover: #334155; /* Kort vid hover (slate-700) */
+
+            /* Textfärger */
+            --text: #f8fafc;
+            --text-muted: rgba(248, 250, 252, 0.7);
+
+            /* Accentfärger */
+            --accent: #f97316;
+            --accent2: #a855f7;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+
+            /* Ramar */
+            --border: rgba(255, 255, 255, 0.15);
+            --border-hover: rgba(255, 255, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ===== CARD GRID VIEW ===== */
+        .card-view {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card-view.hidden {
+            display: none;
+        }
+
+        .slide-card {
+            aspect-ratio: 16/10;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .slide-card:first-child {
+            border-color: var(--accent);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .card-id {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 0.5rem;
+            font-size: 0.7rem;
+            opacity: 0.3;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        .card-type {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            font-size: 0.6rem;
+            opacity: 0.5;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+
+        /* ===== SLIDE FULLSCREEN VIEW ===== */
+        .slide-view {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            display: none;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .slide-view.active {
+            display: flex;
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .close-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.2s;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== DIMMER BUTTON ===== */
+        .dimmer-btn {
+            position: fixed;
+            top: 1rem;
+            right: 5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 101;
+            transition: all 0.3s;
+        }
+
+        .dimmer-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .dimmer-btn.active {
+            background: var(--accent);
+        }
+
+        .slide-view.dimmed::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .slide-view.dimmed .slide-content {
+            z-index: 2;
+            position: relative;
+        }
+
+        .slide-view.dimmed .close-btn,
+        .slide-view.dimmed .dimmer-btn {
+            z-index: 102;
+        }
+
+        .nav-btn {
+            display: none;
+        }
+
+        .slide-id-display {
+            position: fixed;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            opacity: 0.4;
+        }
+
+        /* ===== SLIDE TYPE: TITLE ===== */
+        .slide-title-type {
+            text-align: center;
+        }
+
+        .slide-title-type h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .slide-title-type .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            opacity: 0.8;
+        }
+
+        .slide-title-type .meta {
+            margin-top: 2rem;
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+
+        /* ===== SLIDE TYPE: PRESENTER ===== */
+        .slide-presenter {
+            text-align: center;
+            max-width: 800px;
+        }
+
+        .slide-presenter .avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin: 0 auto 2rem;
+            overflow: hidden;
+        }
+
+        .slide-presenter .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-presenter h2 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-presenter .title-org {
+            color: var(--accent);
+            font-size: clamp(1.3rem, 2.5vw, 1.8rem);
+            margin-bottom: 2rem;
+        }
+
+        .slide-presenter .bio {
+            opacity: 0.9;
+            line-height: 1.8;
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+        }
+
+        .slide-presenter .contact {
+            margin-top: 2rem;
+            opacity: 0.6;
+            font-size: 1rem;
+        }
+
+        /* ===== SLIDE TYPE: STAT ===== */
+        .slide-stat {
+            text-align: center;
+        }
+
+        .slide-stat .stat-value {
+            font-size: clamp(6rem, 20vw, 14rem);
+            font-weight: 900;
+            line-height: 1;
+            background: linear-gradient(135deg, #fcd34d, var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-stat .stat-label {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            opacity: 0.9;
+            margin-top: 1rem;
+            max-width: 700px;
+        }
+
+        .slide-stat .stat-source {
+            margin-top: 2rem;
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+
+        /* ===== SLIDE TYPE: QUOTE ===== */
+        .slide-quote {
+            max-width: 1000px;
+            text-align: center;
+        }
+
+        .slide-quote.typewriter {
+            font-family: 'JetBrains Mono', monospace;
+            color: #fff;
+        }
+
+        .slide-quote .quote-text {
+            font-size: clamp(1.2rem, 2vw, 2.2rem);
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .slide-quote.typewriter .quote-text {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            font-size: clamp(1.4rem, 2.5vw, 2.3rem);
+        }
+
+        .slide-quote .highlight {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .slide-quote .quote-author {
+            margin-top: 2rem;
+            opacity: 0.6;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide-quote .cursor {
+            display: inline-block;
+            width: 0.6em;
+            height: 1.2em;
+            background: currentColor;
+            margin-left: 0.2em;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* ===== SLIDE TYPE: GRID ===== */
+        .slide-grid {
+            text-align: center;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .slide-grid h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .grid-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            text-align: left;
+            transition: all 0.3s;
+        }
+
+        .grid-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .grid-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .grid-card-title {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+            color: var(--accent);
+        }
+
+        .grid-card-desc {
+            font-size: 1rem;
+            opacity: 0.85;
+            line-height: 1.6;
+        }
+
+        /* ===== SLIDE TYPE: QUAD-FLIP ===== */
+        .slide-quad {
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .slide-quad h2 {
+            font-size: 1.8rem;
+            color: var(--red);
+            margin-bottom: 2rem;
+        }
+
+        .quad-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .quad-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .quad-card:hover {
+            border-color: var(--border-hover);
+            background: var(--card-bg-hover);
+            transform: translateY(-3px);
+        }
+
+        .quad-card.flipped {
+            background: var(--card-bg-hover);
+            border-color: var(--accent);
+        }
+
+        .quad-front {
+            transition: opacity 0.3s;
+        }
+
+        .quad-back {
+            display: none;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .quad-card.flipped .quad-front {
+            display: none;
+        }
+
+        .quad-card.flipped .quad-back {
+            display: block;
+        }
+
+        .quad-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .quad-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        /* ===== SLIDE TYPE: MODAL-CARDS ===== */
+        .slide-modal-cards {
+            text-align: center;
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        .slide-modal-cards h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 2.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .modal-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            border: 2px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            border-top: 4px solid var(--card-color, var(--accent));
+        }
+
+        .modal-card:hover {
+            border-color: var(--accent);
+            background: var(--card-bg-hover);
+            transform: translateY(-4px);
+        }
+
+        .modal-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-card-icon img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+        }
+
+        .modal-card-title {
+            font-weight: 700;
+            font-size: 1.3rem;
+        }
+
+        .card-modal-content {
+            text-align: left;
+        }
+
+        .card-modal-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .card-modal-icon {
+            float: right;
+            margin-left: 1.5rem;
+            font-size: 4rem;
+        }
+
+        .card-modal-icon img {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .card-modal-text {
+            font-size: 2.2rem;
+            line-height: 1.5;
+        }
+
+        .card-modal-text strong {
+            color: var(--accent);
+        }
+
+        /* ===== SLIDE TYPE: TRAFFIC-LIGHT ===== */
+        .slide-traffic {
+            width: 100%;
+            max-width: 1000px;
+        }
+
+        .slide-traffic h2 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ===== SLIDE TYPE: IMAGE ===== */
+        .slide-image {
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .slide-image h2 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+            color: #fff;
+        }
+
+        .slide-image .subtitle {
+            font-size: clamp(1.2rem, 2vw, 1.5rem);
+            opacity: 0.7;
+            margin-bottom: 2rem;
+        }
+
+        .slide-image img {
+            max-width: 100%;
+            max-height: 65vh;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* ===== SLIDE TYPE: ROLES DIAGRAM ===== */
+        .slide-roles-diagram {
+            text-align: center;
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-roles-diagram h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .roles-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            position: relative;
+        }
+
+        .roles-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+
+        .role-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .role-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .role-icon {
+            font-size: 6rem;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 0 20px rgba(249,115,22,0.4));
+        }
+
+        .role-footer {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+        
+        .role-footer strong {
+            color: var(--accent);
+        }
+
+        .traffic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .traffic-col {
+            border-radius: 12px;
+            padding: 1.2rem;
+        }
+
+        .traffic-col.green {
+            background: rgba(34, 197, 94, 0.15);
+            border: 2px solid var(--green);
+        }
+
+        .traffic-col.yellow {
+            background: rgba(234, 179, 8, 0.15);
+            border: 2px solid var(--yellow);
+        }
+
+        .traffic-col.red {
+            background: rgba(239, 68, 68, 0.15);
+            border: 2px solid var(--red);
+        }
+
+        .traffic-header {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .traffic-col.green .traffic-header {
+            color: var(--green);
+        }
+
+        .traffic-col.yellow .traffic-header {
+            color: var(--yellow);
+        }
+
+        .traffic-col.red .traffic-header {
+            color: var(--red);
+        }
+
+        .traffic-list {
+            list-style: none;
+        }
+
+        .traffic-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .traffic-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* ===== SLIDE TYPE: INCIDENTS ===== */
+        .slide-incidents {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .slide-incidents h2 {
+            color: var(--yellow);
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-incidents .subtitle {
+            opacity: 0.8;
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+        }
+
+        .incidents-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .incidents-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .incident-card {
+            background: var(--card-bg);
+            border: 2px solid var(--red);
+            border-radius: 16px;
+            padding: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+        }
+
+        .incident-card:hover {
+            border-color: var(--red);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.2);
+        }
+
+        .incident-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .incident-name {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+
+        .incident-age {
+            color: var(--red);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .incident-platform {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+        }
+
+        .incident-desc {
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* ===== SLIDE TYPE: TOOL-LINKS ===== */
+        .slide-tools {
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .slide-tools h2 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .tool-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1), rgba(34, 197, 94, 0.05));
+            border: 2px solid var(--green);
+            border-radius: 14px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .tool-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tool-name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .tool-desc {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        /* ===== SLIDE TYPE: PROMPT-DEMO ===== */
+        .slide-prompt-demo {
+            text-align: center;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .slide-prompt-demo h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent2), #06b6d4);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-prompt-demo .subtitle {
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-box {
+            background: #1a1a2e;
+            border: 2px solid var(--accent2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: left;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .prompt-box pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: #e2e8f0;
+            margin: 0;
+        }
+
+        .prompt-box .placeholder {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.8rem;
+            background: var(--accent2);
+            border: none;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #9333ea;
+        }
+
+        .copy-btn.copied {
+            background: var(--green);
+        }
+
+        .prompt-example {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid var(--green);
+            border-radius: 10px;
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .prompt-example-label {
+            color: var(--green);
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .prompt-example-text {
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .prompt-why {
+            margin-top: 1.5rem;
+            background: rgba(168, 85, 247, 0.1);
+            border-left: 4px solid var(--accent2);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        /* ===== SLIDE TYPE: VIDEO-LINK ===== */
+        .slide-video-link {
+            text-align: center;
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .slide-video-link h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-video-link .subtitle {
+            opacity: 0.7;
+            margin-bottom: 2rem;
+            font-size: 1.2rem;
+        }
+
+        .video-play-button {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 2rem 4rem;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(168, 85, 247, 0.3);
+        }
+
+        .video-play-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 48px rgba(168, 85, 247, 0.5);
+        }
+
+        .play-icon {
+            font-size: 4rem;
+            line-height: 1;
+        }
+
+        .play-text {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .video-description {
+            margin-top: 2rem;
+            opacity: 0.8;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* ===== SLIDE TYPE: STEP-SLIDE ===== */
+        .slide-step {
+            text-align: center;
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+        }
+
+        .step-container {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .step-content {
+            display: none;
+            animation: fadeInStep 0.5s ease;
+        }
+
+        .step-content.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        @keyframes fadeInStep {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .step-subtitle {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            color: var(--sage);
+            font-weight: 600;
+        }
+
+        .step-definition {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            max-width: 800px;
+            line-height: 1.6;
+            color: var(--accent);
+        }
+
+        .step-list {
+            text-align: left;
+            max-width: 900px;
+            list-style: none;
+            padding-left: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+        }
+
+        .step-list li {
+            font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+            line-height: 1.5;
+            background: var(--card-bg);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .step-list li strong {
+            color: #fff;
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .step-list li span {
+            color: var(--text-muted);
+        }
+
+        .step-list li.highlight {
+            background: rgba(249, 115, 22, 0.15); /* var(--accent) with opacity */
+            border: 1px solid var(--accent);
+            border-left: 6px solid var(--accent);
+            transform: scale(1.03);
+            margin: 10px 0;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .step-list li.highlight strong {
+            color: var(--accent);
+            font-size: 110%;
+        }
+
+        .step-list li.highlight span {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .step-footer {
+            color: var(--coral);
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            font-weight: 600;
+            font-style: italic;
+            margin-top: 1.5rem;
+        }
+
+        .step-dots {
+            display: flex;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: var(--accent);
+            transform: scale(1.3);
+        }
+
+        .step-hint {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0.5;
+            font-size: 0.9rem;
+        }
+
+        /* ===== SLIDE TYPE: TOKEN-DEMO ===== */
+        .slide-token-demo {
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .slide-token-demo h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-token-demo .desc {
+            opacity: 0.7;
+            margin-bottom: 2rem;
+        }
+
+        .demo-box {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .prompt-area {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .predicted {
+            color: var(--green);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .predicted.visible {
+            opacity: 1;
+        }
+
+        .token-cursor {
+            display: inline-block;
+            width: 0.6em;
+            height: 1.2em;
+            background: var(--accent);
+            margin-left: 0.1em;
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+        }
+
+        .options {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            background: rgba(249, 115, 22, 0.15);
+            border: 2px solid var(--accent);
+            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .option:hover {
+            background: var(--accent);
+            color: var(--bg);
+        }
+
+        .option.selected {
+            background: var(--green);
+            border-color: var(--green);
+            color: var(--bg);
+        }
+
+        .probability {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-left: 0.5rem;
+        }
+
+        .explanation {
+            background: rgba(168, 85, 247, 0.1);
+            border-left: 4px solid var(--accent2);
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .reset-btn {
+            margin-top: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Modal for incidents */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal h3 {
+            color: var(--red);
+            margin-bottom: 1rem;
+        }
+
+        .modal p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .modal a {
+            color: var(--yellow);
+        }
+
+        /* Source button */
+        .source-btn {
+            position: fixed;
+            bottom: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            z-index: 101;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .source-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--yellow);
+        }
+
+        .sources-modal h3 {
+            color: var(--yellow);
+            margin-bottom: 1rem;
+        }
+
+        .sources-modal .source-item {
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sources-modal .source-item:last-child {
+            border-bottom: none;
+        }
+
+        .sources-modal .source-name {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .sources-modal .source-url {
+            font-size: 0.85rem;
+            color: var(--yellow);
+            word-break: break-all;
+        }
+
+        @media (max-width: 768px) {
+
+            .traffic-grid,
+            .quad-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Large screen optimization for auditorium presentations */
+        @media (min-width: 1200px) {
+            .slide-content {
+                padding: 3rem;
+            }
+
+            /* Bigger titles */
+            .slide-title-type h1 {
+                font-size: clamp(4rem, 8vw, 8rem);
+            }
+
+            .slide-title-type .subtitle {
+                font-size: clamp(1.5rem, 3vw, 2.5rem);
+            }
+
+            /* Bigger stats */
+            .slide-stat .stat-value {
+                font-size: clamp(10rem, 25vw, 20rem);
+            }
+
+            .slide-stat .stat-label {
+                font-size: clamp(1.8rem, 4vw, 3rem);
+                max-width: 1000px;
+            }
+
+            /* Bigger quotes */
+            .slide-quote {
+                max-width: 1200px;
+            }
+
+            .slide-quote .quote-text {
+                font-size: clamp(2rem, 4vw, 3.5rem);
+            }
+
+            .slide-quote .quote-author {
+                font-size: 1.5rem;
+            }
+
+            /* Bigger grid cards */
+            .grid-cards {
+                gap: 2rem;
+            }
+
+            .grid-card {
+                padding: 2.5rem;
+            }
+
+            .grid-card-icon {
+                font-size: 4rem;
+            }
+
+            .grid-card-title {
+                font-size: 1.6rem;
+            }
+
+            .grid-card-desc {
+                font-size: 1.2rem;
+            }
+
+            /* Bigger quad flip cards */
+            .quad-card {
+                min-height: 280px;
+            }
+
+            .quad-icon {
+                font-size: 4rem;
+            }
+
+            .quad-title {
+                font-size: 1.4rem;
+            }
+
+            .quad-back {
+                font-size: 1.3rem;
+            }
+
+            /* Bigger traffic light */
+            .traffic-column h3 {
+                font-size: 1.6rem;
+            }
+
+            .traffic-item {
+                font-size: 1.2rem;
+                padding: 1rem;
+            }
+
+            /* Bigger prompt demo */
+            .slide-prompt-demo {
+                max-width: 1100px;
+            }
+
+            .prompt-box pre {
+                font-size: 1.3rem;
+            }
+
+            /* Bigger token demo */
+            .slide-token-demo {
+                max-width: 1000px;
+            }
+
+            .demo-box {
+                padding: 3rem;
+            }
+
+            .prompt-area {
+                font-size: 2rem;
+            }
+
+            .option {
+                font-size: 1.4rem;
+                padding: 1.2rem 2rem;
+            }
+            /* Rewrite progression */
+            .slide-rewrite { text-align: center; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; }
+            .rewrite-prefix { font-size: 1.8rem; font-weight: 300; color: var(--accent); opacity: 0; transition: opacity 0.6s ease; font-style: italic; }
+            .rewrite-prefix.visible { opacity: 1; }
+            .rewrite-main { font-size: 3rem; font-weight: 300; line-height: 1.5; color: var(--text); }
+            .rewrite-main .rw-slot { display: inline; color: #fff; transition: color 0.4s ease; }
+            .rewrite-main .rw-slot.active { border-right: 2px solid var(--accent); animation: blink-cursor 0.8s step-end infinite; color: var(--accent); }
+            .rewrite-main .rw-slot.changed { color: var(--accent); }
+            .rewrite-main .rw-slot .changed { color: var(--accent); }
+            
+            /* Case Grid */
+            .slide-case-grid { max-width: 1200px; margin: 0 auto; text-align: center; }
+            .slide-case-grid h2 { font-size: 2.8rem; font-weight: 700; margin-bottom: 40px; }
+            .cg-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+            .cg-card { 
+                background: var(--card-bg); border-radius: 20px; padding: 32px; 
+                text-align: left; cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+                position: relative; overflow: hidden;
+                border: 1px solid var(--border);
+            }
+            .cg-card::before {
+                content: ''; position: absolute; top: 0; left: 0; width: 8px; height: 100%;
+                background: var(--card-color, var(--accent));
+            }
+            .cg-card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.4); border-color: var(--accent); }
+            .cg-card.expanded { grid-column: 1 / -1; }
+            .cg-title { font-size: 2.2rem; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+            .cg-desc { font-size: 1.6rem; color: var(--text-muted); line-height: 1.6; }
+            .cg-card.expanded .cg-desc { font-size: 1.8rem; margin-top: 24px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 24px; }
+            .cg-image-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin: 24px 0; }
+            .cg-image-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; cursor: zoom-in; transition: transform 0.2s; }
+            .cg-image-grid img:hover { transform: scale(1.05); }
+
+            /* Interactive Timer Slide */
+            .slide-timer { max-width: 900px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+            .slide-timer h2 { font-size: 5rem; margin-bottom: 20px; color: #fff; }
+            .slide-timer .subtitle { font-size: 2.2rem; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+            .timer-setup { display: flex; align-items: center; gap: 20px; background: rgba(255,255,255,0.05); padding: 30px 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+            .timer-setup label { font-size: 2.4rem; font-weight: 500; color: #fff; }
+            .timer-setup input { font-size: 3rem; padding: 10px 20px; background: rgba(0,0,0,0.6); border: 2px solid var(--accent); color: var(--accent); border-radius: 8px; font-family: var(--font); box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+            .timer-setup input:focus { outline: none; box-shadow: 0 0 20px rgba(255,95,86,0.3); }
+            .timer-setup button { font-size: 2.4rem; padding: 15px 30px; background: var(--accent); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.2s; box-shadow: 0 4px 15px rgba(255,95,86,0.3); }
+            .timer-setup button:hover { background: #ff4035; transform: scale(1.05); }
+            .timer-display { margin-top: 40px; display: none; flex-direction: column; align-items: center; }
+            .timer-digits { font-size: 16rem; font-weight: bold; color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1; text-shadow: 0 0 40px rgba(255, 95, 86, 0.4); }
+            
+            .timer-fullscreen-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(10, 10, 10, 0.95); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.5s ease; backdrop-filter: blur(20px); }
+            .timer-fullscreen-overlay.visible { opacity: 1; pointer-events: auto; }
+            .timer-fullscreen-text { font-size: 8rem; font-weight: bold; color: var(--accent); text-align: center; max-width: 80%; line-height: 1.2; text-shadow: 0 10px 50px rgba(255,95,86,0.3); }
+
+            /* ===== LIGHTBOX ===== */
+            .slide-lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 9999;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            }
+            .slide-lightbox.visible { opacity: 1; pointer-events: auto; }
+            .slide-lightbox.theme-light { background: rgba(250,250,248,0.95); }
+            .lightbox-close {
+            position: absolute; top: 24px; right: 24px;
+            background: transparent; border: 1px solid var(--text-muted); color: var(--text-muted);
+            padding: 8px 16px; font-family: var(--font); font-size: 0.9rem; cursor: pointer;
+            border-radius: 8px; transition: all 0.2s;
+            }
+            .lightbox-close:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: #fff; }
+            .slide-lightbox.theme-dark .lightbox-close { color: #fff; border-color: rgba(255,255,255,0.5); }
+            .slide-lightbox.theme-dark .lightbox-close:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+            .lightbox-content {
+            max-width: 1000px; width: 90%; max-height: 90vh; overflow-y: auto;
+            padding: 40px; background: var(--card-bg); border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4); font-family: var(--font);
+            }
+            .slide-lightbox.theme-dark .lightbox-content { background: #111; color: #eee; border: 1px solid #333; }
+            
+            /* Conversation Slide */
+            .slide-conversation { max-width: 900px; height: 75vh; overflow-y: auto; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; text-align: left; padding: 20px 20px 200px 20px; -ms-overflow-style: none; scrollbar-width: none; }
+            .slide-conversation::-webkit-scrollbar { display: none; }
+            .conv-message { padding: 20px 25px; border-radius: 20px; font-size: 1.6rem; max-width: 85%; opacity: 0; transform: translateY(20px); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: none; }
+            .conv-message.active { opacity: 1; transform: translateY(0); display: block; }
+            .conv-user { align-self: flex-end; background: rgba(249, 115, 22, 0.15); border: 1px solid var(--accent); color: var(--text); border-bottom-right-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+            .conv-ai { align-self: flex-start; background: var(--card-bg); border: 1px solid var(--border); border-bottom-left-radius: 4px; color: var(--text); }
+            .conv-meta { font-size: 1rem; opacity: 0.7; margin-bottom: 8px; font-family: monospace; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+            .conv-ai .conv-meta { color: var(--accent); }
+            
+            /* Email Mockup Slide */
+            .slide-email { max-width: 1200px; margin: 0 auto; width: 100%; border-radius: 12px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #ffffff; color: #333333; text-align: left; }
+            .email-header { background: #e5e5e5; padding: 15px 20px; border-bottom: 1px solid #d0d0d0; display: flex; align-items: center; gap: 8px; }
+            .email-dots { display: flex; gap: 8px; }
+            .email-dot { width: 14px; height: 14px; border-radius: 50%; }
+            .email-dot.red { background: #ff5f56; }
+            .email-dot.yellow { background: #ffbd2e; }
+            .email-dot.green { background: #27c93f; }
+            .email-meta { padding: 25px 30px; border-bottom: 1px solid #e0e0e0; font-size: 1.3rem; background: #fafafa; }
+            .email-meta div { margin-bottom: 10px; display: flex; }
+            .email-meta span { color: #888; width: 80px; display: inline-block; font-weight: 600; flex-shrink: 0; }
+            .email-meta .meta-val { color: #111; font-weight: 400; }
+            .email-meta .meta-subject { font-weight: 700; font-size: 1.5rem; margin-top: 15px; color: #000; }
+            .email-body { padding: 40px 40px 60px 40px; font-size: 2.4rem; line-height: 1.6; max-height: 50vh; overflow-y: auto; color: #222; scroll-behavior: smooth; }
+            .email-body .cursor { display: inline-block; width: 2px; height: 1.2em; background-color: #333; margin-left: 2px; vertical-align: middle; animation: blink-cursor 0.8s step-end infinite; }
+            
+            /* Name Input Slide */
+            .slide-name-input { max-width: 900px; margin: 0 auto; text-align: center; }
+            .slide-name-input h2 { font-size: 4.5rem; margin-bottom: 15px; color: #fff; text-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+            .slide-name-input .subtitle { font-size: 2.2rem; color: rgba(255,255,255,0.8); margin-bottom: 40px; }
+            .input-grid { display: flex; flex-direction: column; gap: 25px; margin-top: 40px; }
+            .input-group { display: flex; align-items: center; justify-content: flex-start; background: rgba(30, 30, 40, 0.8); padding: 20px 40px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 40px rgba(0,0,0,0.4); backdrop-filter: blur(10px); }
+            .input-group label { font-size: 2.4rem; font-weight: 500; color: #fff; width: 300px; text-align: left; }
+            .input-group input { flex-grow: 1; font-size: 2.4rem; padding: 15px 25px; border-radius: 10px; border: 2px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4); color: var(--accent); font-family: var(--font); transition: all 0.3s; box-shadow: inset 0 2px 10px rgba(0,0,0,0.5); }
+            .input-group input:focus { outline: none; border-color: var(--accent); background: rgba(0,0,0,0.6); box-shadow: 0 0 20px rgba(255,100,100,0.2), inset 0 2px 10px rgba(0,0,0,0.5); }
+            .input-group input::placeholder { color: rgba(255,255,255,0.2); }
+            
+            .slide-lightbox.theme-dark .lightbox-content { background: #111; color: #eee; border: 1px solid #333; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card-view" id="cardView"></div>
+
+    <div class="slide-view" id="slideView">
+        <button class="close-btn" onclick="closeSlide()">✕</button>
+        <button class="dimmer-btn" id="dimmerBtn" onclick="toggleDimmer()" title="Dimma bakgrund">🌙</button>
+        <div class="slide-content" id="slideContent"></div>
+        <div class="slide-id-display" id="slideIdDisplay"></div>
+    </div>
+
+    <div class="modal-overlay" id="incidentModal" onclick="closeIncidentModal(event)">
+        <div class="modal" id="incidentModalContent" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <div class="modal-overlay" id="sourcesModal" onclick="closeSourcesModal(event)">
+        <div class="modal sources-modal" id="sourcesModalContent" onclick="event.stopPropagation()"></div>
+    </div>
+
+    <button class="source-btn" id="sourceBtn" style="display:none" onclick="showSources()">
+        📚 Källor
+    </button>
+
+    <button id="fullscreenBtn" onclick="toggleFullScreen()" title="Helskärm" style="position: fixed; bottom: 15px; left: 15px; z-index: 10000; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.5rem; opacity: 0.3; padding: 10px; transition: opacity 0.2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.3">
+        ⛶
+    </button>
+
+    <!-- Slide Lightbox -->
+    <div id="slideLightbox" class="slide-lightbox theme-dark">
+        <button id="lightboxClose" class="lightbox-close">[ STÄNG ]</button>
+        <div id="lightboxContent" class="lightbox-content"></div>
+    </div>
+
+    <script>
+        let slidesData = [];
+        let currentSlideIndex = 0;
+        
+        let globalNames = {
+            elev: "",
+            mamma: "",
+            larare: ""
+        };
+        
+        function replaceNames(text) {
+            if(!text) return text;
+            return text
+                .replace(/\[ELEV\]/g, globalNames.elev)
+                .replace(/\[MAMMA\]/g, globalNames.mamma)
+                .replace(/\[LÄRARE\]/g, globalNames.larare);
+        }
+
+        // Load slides from JSON
+        async function loadSlides() {
+            try {
+                const response = await fetch('slides.json?t=' + new Date().getTime());
+                const data = await response.json();
+                slidesData = data.slides;
+                renderCardView();
+            } catch (error) {
+                console.error('Failed to load slides:', error);
+                document.getElementById('cardView').innerHTML = '<p style="padding:2rem;opacity:0.5">Kunde inte ladda slides.json</p>';
+            }
+        }
+
+        // Render card grid
+        function renderCardView() {
+            const container = document.getElementById('cardView');
+            container.innerHTML = slidesData.map((slide, index) => {
+                const bgStyle = slide.background
+                    ? `background-image: linear-gradient(rgba(10, 10, 30, 0.5), rgba(10, 10, 30, 0.7)), url('${slide.background}'); background-size: cover; background-position: center;`
+                    : '';
+                const cardTitle = getCardTitle(slide);
+                return `
+                <div class="slide-card" onclick="openSlide(${index})" style="${bgStyle}">
+                    <span class="card-type">${slide.type}</span>
+                    <span class="card-title">${cardTitle}</span>
+                    <span class="card-id">${slide.id}</span>
+                </div>
+            `}).join('');
+        }
+
+        function getCardTitle(slide) {
+            // Prioritera title, sedan author för quotes, sedan andra fält
+            if (slide.title) return slide.title;
+            if (slide.type === 'quote' && slide.author) return slide.author;
+            if (slide.name) return slide.name;
+            if (slide.value) return slide.value;
+            if (slide.type === 'quote' && slide.text) {
+                // Extrahera första 30 tecken av texten
+                const cleanText = slide.text.replace(/\*/g, '').substring(0, 35);
+                return cleanText + '...';
+            }
+            return 'Slide';
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                'title': '🎬',
+                'presenter': '👤',
+                'stat': '📊',
+                'quote': '💬',
+                'grid': '📦',
+                'quad-flip': '🔄',
+                'traffic-light': '🚦',
+                'incidents': '⚠️',
+                'tool-links': '🔧',
+                'token-demo': '🧠',
+                'step-slide': '📖',
+                'prompt-demo': '✨',
+                'video-link': '🎬'
+            };
+            return icons[type] || '📄';
+        }
+
+        // Open slide in fullscreen
+        function openSlide(index) {
+            currentSlideIndex = index;
+            renderCurrentSlide();
+            document.getElementById('cardView').classList.add('hidden');
+            document.getElementById('slideView').classList.add('active');
+        }
+
+        function closeSlide() {
+            document.getElementById('slideView').classList.remove('active');
+            document.getElementById('slideView').classList.remove('dimmed');
+            document.getElementById('dimmerBtn').classList.remove('active');
+            document.getElementById('cardView').classList.remove('hidden');
+        }
+
+        function openLightbox(imageSrc) {
+            const lb = document.getElementById('slideLightbox');
+            const content = document.getElementById('lightboxContent');
+            lb.classList.add('visible');
+            content.innerHTML = `<img src="${imageSrc}" style="width:100%;max-height:80vh;object-fit:contain;border-radius:12px;">`;
+            document.getElementById('lightboxClose').onclick = () => { lb.classList.remove('visible'); };
+            lb.onclick = (e) => { if(e.target === lb) lb.classList.remove('visible'); };
+        }
+
+        function toggleDimmer() {
+            const slideView = document.getElementById('slideView');
+            const dimmerBtn = document.getElementById('dimmerBtn');
+            slideView.classList.toggle('dimmed');
+            dimmerBtn.classList.toggle('active');
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Kunde inte starta helskärm: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                renderCurrentSlide();
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < slidesData.length - 1) {
+                currentSlideIndex++;
+                renderCurrentSlide();
+            }
+        }
+
+        function renderCurrentSlide() {
+            window.handleNextStep = null;
+            const slide = slidesData[currentSlideIndex];
+            const content = document.getElementById('slideContent');
+            const slideView = document.getElementById('slideView');
+            document.getElementById('slideIdDisplay').textContent = `${currentSlideIndex + 1}/${slidesData.length} • ${slide.id}`;
+
+            // Apply background image if specified
+            if (slide.background) {
+                slideView.style.backgroundImage = `linear-gradient(rgba(10, 10, 30, 0.7), rgba(10, 10, 30, 0.8)), url('${slide.background}')`;
+                slideView.style.backgroundSize = 'cover';
+                slideView.style.backgroundPosition = 'center';
+            } else {
+                slideView.style.backgroundImage = '';
+            }
+
+            switch (slide.type) {
+                case 'image': content.innerHTML = renderImage(slide); break;
+                case 'title': content.innerHTML = renderTitle(slide); break;
+                case 'presenter': content.innerHTML = renderPresenter(slide); break;
+                case 'stat': content.innerHTML = renderStat(slide); break;
+                case 'quote': content.innerHTML = renderQuote(slide); break;
+                case 'grid': content.innerHTML = renderGrid(slide); break;
+                case 'quad-flip': content.innerHTML = renderQuadFlip(slide); break;
+                case 'modal-cards': content.innerHTML = renderModalCards(slide); break;
+                case 'traffic-light': content.innerHTML = renderTrafficLight(slide); break;
+                case 'incidents': content.innerHTML = renderIncidents(slide); break;
+                case 'roles-diagram': content.innerHTML = renderRolesDiagram(slide); break;
+                case 'tool-links': content.innerHTML = renderToolLinks(slide); break;
+                case 'token-demo': content.innerHTML = renderTokenDemo(slide); break;
+                case 'prompt-demo': content.innerHTML = renderPromptDemo(slide); break;
+                case 'video-link': content.innerHTML = renderVideoLink(slide); break;
+                case 'step-slide': content.innerHTML = renderStepSlide(slide); break;
+                case 'case-grid': content.innerHTML = renderCaseGrid(slide); break;
+                case 'name-input': content.innerHTML = renderNameInput(slide); break;
+                case 'interactive-timer': content.innerHTML = renderInteractiveTimer(slide); break;
+                case 'document-mockup': content.innerHTML = renderDocumentMockup(slide); break;
+                case 'email-mockup': content.innerHTML = renderEmailMockup(slide); break;
+                case 'conversation': 
+                    content.innerHTML = renderConversation(slide); 
+                    setTimeout(() => initConversation(content.querySelector('.slide-conversation'), slide.messages), 100);
+                    break;
+                case 'rewrite-progression': 
+                    content.innerHTML = renderRewriteProgression(slide); 
+                    setTimeout(() => initRewriteProgression(content.querySelector('.slide-rewrite'), slide.steps, slide.prefix||[]), 100);
+                    break;
+                default: content.innerHTML = `<p>Unknown slide type: ${slide.type}</p>`;
+            }
+            updateSourceButton();
+        }
+
+        function renderImage(s) {
+            return `<div class="slide-image">
+                ${s.title ? `<h2>${s.title}</h2>` : ''}
+                ${s.subtitle ? `<div class="subtitle">${s.subtitle}</div>` : ''}
+                <img src="${s.image}" alt="${s.title || ''}">
+                ${s.description ? `<div class="image-description" style="margin-top: 2rem; font-size: 1.5rem; max-width: 800px; color: #cbd5e1; line-height: 1.6;">${s.description}</div>` : ''}
+            </div>`;
+        }
+
+        function renderRolesDiagram(s) {
+            return `<div class="slide-roles-diagram">
+                <h2>${s.title}</h2>
+                <div class="roles-container">
+                    ${s.roles.map(r => `
+                        <div class="role-column">
+                            <div class="role-header">${r.name}</div>
+                            <div class="role-icon">
+                                ${r.image ? `<img src="${r.image}" alt="${r.name}" style="width: 140px; height: 140px; object-fit: cover; border-radius: 50%; border: 4px solid var(--accent); box-shadow: 0 0 20px rgba(249,115,22,0.4);">` : r.icon}
+                            </div>
+                            <div class="role-footer"><strong>Funktion:</strong> ${r.function}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        function renderTitle(s) {
+            return `<div class="slide-title-type">
+                <h1>${s.title}</h1>
+                <div class="subtitle">${s.subtitle || ''}</div>
+                <div class="meta">${s.meta || ''}</div>
+            </div>`;
+        }
+
+        function renderPresenter(s) {
+            const avatarContent = s.avatar
+                ? `<img src="${s.avatar}" alt="${s.name}">`
+                : '👤';
+            return `<div class="slide-presenter">
+                <div class="avatar">${avatarContent}</div>
+                <h2>${s.name}</h2>
+                <div class="title-org">${s.title} • ${s.org}</div>
+                <div class="bio">${s.bio || ''}</div>
+                ${s.contact ? `<div class="contact">${s.contact}</div>` : ''}
+            </div>`;
+        }
+
+        function renderStat(s) {
+            return `<div class="slide-stat">
+                <div class="stat-value">${s.value}</div>
+                <div class="stat-label">${s.label}</div>
+                <div class="stat-source">Källa: ${s.source}</div>
+            </div>`;
+        }
+
+        function renderQuote(s) {
+            const isTypewriter = s.style === 'typewriter';
+            const rawText = s.text;
+            const slowSpeed = s.slowSpeed || false;
+            const sizeStyle = s.size === 'large' ? 'font-size: clamp(2.5rem, 4vw, 4.5rem); line-height: 1.3;' : '';
+            if (isTypewriter) {
+                // Return container, will animate after render
+                setTimeout(() => typewriterAnimate(rawText, s.author, slowSpeed), 100);
+                return `<div class="slide-quote typewriter">
+                    <div class="quote-text" id="typewriterText" style="${sizeStyle}"></div>
+                    <div class="quote-author" id="typewriterAuthor" style="opacity:0"></div>
+                    ${s.comment ? `<div class="quote-comment" id="typewriterComment" style="opacity:0; margin-top: 40px; font-size: 1.8rem; color: #cbd5e1; padding: 20px; background: rgba(249,115,22,0.1); border-radius: 8px; border-left: 4px solid var(--accent); transition: opacity 1s ease; line-height: 1.6;">${s.comment.replace(/\*([^*]+)\*/g, '<span class="highlight" style="color: var(--accent); font-weight: bold;">$1</span>')}</div>` : ''}
+                </div>`;
+            } else {
+                const text = rawText.replace(/\*([^*]+)\*/g, '<span class="highlight">$1</span>');
+                return `<div class="slide-quote">
+                    <div class="quote-text">${text}</div>
+                    ${s.author ? `<div class="quote-author">— ${s.author}</div>` : ''}
+                    ${s.comment ? `<div class="quote-comment" style="margin-top: 40px; font-size: 1.8rem; color: #cbd5e1; padding: 20px; background: rgba(249,115,22,0.1); border-radius: 8px; border-left: 4px solid var(--accent); line-height: 1.6;">${s.comment.replace(/\*([^*]+)\*/g, '<span class="highlight" style="color: var(--accent); font-weight: bold;">$1</span>')}</div>` : ''}
+                </div>`;
+            }
+        }
+
+        function typewriterAnimate(rawText, author, slowSpeed = false) {
+            const container = document.getElementById('typewriterText');
+            const authorEl = document.getElementById('typewriterAuthor');
+            const baseDelay = slowSpeed ? 60 : 30;
+            const randomDelay = slowSpeed ? 80 : 40;
+            if (!container) return;
+
+            // Process text to handle *highlights*
+            let chars = [];
+            let inHighlight = false;
+            let i = 0;
+            while (i < rawText.length) {
+                if (rawText[i] === '*') {
+                    inHighlight = !inHighlight;
+                    i++;
+                } else {
+                    chars.push({ char: rawText[i], highlight: inHighlight });
+                    i++;
+                }
+            }
+
+            container.innerHTML = '';
+            let charIndex = 0;
+
+            function typeNext() {
+                if (charIndex < chars.length) {
+                    const c = chars[charIndex];
+                    if (c.highlight) {
+                        container.innerHTML = container.innerHTML.replace(/<span class="cursor"><\/span>$/, '');
+                        container.innerHTML += `<span class="highlight">${c.char}</span><span class="cursor"></span>`;
+                    } else {
+                        container.innerHTML = container.innerHTML.replace(/<span class="cursor"><\/span>$/, '');
+                        container.innerHTML += c.char + '<span class="cursor"></span>';
+                    }
+                    charIndex++;
+                    setTimeout(typeNext, baseDelay + Math.random() * randomDelay);
+                } else {
+                    container.innerHTML = container.innerHTML.replace(/<span class="cursor"><\/span>$/, '');
+                    container.innerHTML += '<span class="cursor"></span>';
+                    if (author && authorEl) {
+                        authorEl.textContent = author.startsWith('—') ? author : '— ' + author;
+                        authorEl.style.opacity = '0.6';
+                    }
+                    const commentEl = document.getElementById('typewriterComment');
+                    if (commentEl) {
+                        setTimeout(() => commentEl.style.opacity = '1', 1200);
+                    }
+                }
+            }
+
+            container.innerHTML = '<span class="cursor"></span>';
+            setTimeout(typeNext, 500);
+        }
+
+        function renderGrid(s) {
+            return `<div class="slide-grid">
+                <h2>${s.title}</h2>
+                <div class="grid-cards">
+                    ${s.cards.map(c => `
+                        <div class="grid-card">
+                            <div class="grid-card-icon">${c.icon}</div>
+                            <div class="grid-card-title">${c.title}</div>
+                            <div class="grid-card-desc">${c.desc}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        function renderQuadFlip(s) {
+            return `<div class="slide-quad">
+                <h2>⚠️ ${s.title}</h2>
+                <div class="quad-grid">
+                    ${s.cards.map(c => `
+                        <div class="quad-card" onclick="this.classList.toggle('flipped')">
+                            <div class="quad-front">
+                                <div class="quad-icon">${c.icon}</div>
+                                <div class="quad-title">${c.front}</div>
+                            </div>
+                            <div class="quad-back">${c.back}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        function renderModalCards(s) {
+            return `<div class="slide-modal-cards">
+                <h2>${s.title}</h2>
+                <div class="modal-cards-grid">
+                    ${s.cards.map((c, i) => `
+                        <div class="modal-card" style="--card-color:${c.color||'var(--accent)'}" onclick="showCardModal(${currentSlideIndex}, ${i})">
+                            <div class="modal-card-icon">
+                                ${c.icon.endsWith('.png') ? `<img src="${c.icon}" alt="${c.front}">` : c.icon}
+                            </div>
+                            <div class="modal-card-title">${c.front}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        function showCardModal(slideIdx, cardIdx) {
+            const card = slidesData[slideIdx].cards[cardIdx];
+            document.getElementById('incidentModalContent').innerHTML = `
+                <div class="card-modal-content" style="--card-color:${card.color||'var(--accent)'}">
+                    <div class="card-modal-icon">
+                        ${card.icon.endsWith('.png') ? `<img src="${card.icon}" alt="${card.front}">` : card.icon}
+                    </div>
+                    <h3 style="color: var(--card-color)">${card.front}</h3>
+                    <div class="card-modal-text" id="cardModalTextTarget"></div>
+                </div>
+            `;
+            document.getElementById('incidentModal').classList.add('active');
+            
+            // Typewriter effect
+            const target = document.getElementById('cardModalTextTarget');
+            target.innerHTML = '';
+            const text = card.back;
+            let i = 0;
+            if (window.cardTypewriter) clearInterval(window.cardTypewriter);
+            window.cardTypewriter = setInterval(() => {
+                if (i >= text.length) {
+                    clearInterval(window.cardTypewriter);
+                    target.innerHTML = text.replace(/\n/g, '<br>') + '<span class="cursor" style="color:var(--card-color)">|</span>';
+                    return;
+                }
+                const partialText = text.substring(0, i + 1).replace(/\n/g, '<br>');
+                target.innerHTML = partialText + '<span class="cursor" style="color:var(--card-color)">|</span>';
+                i++;
+            }, 30);
+        }
+
+        function renderTrafficLight(s) {
+            return `<div class="slide-traffic">
+                <h2>${s.title}</h2>
+                <div class="traffic-grid">
+                    <div class="traffic-col green">
+                        <div class="traffic-header">✅ Grönt ljus</div>
+                        <ul class="traffic-list">${s.green.map(i => `<li>${i}</li>`).join('')}</ul>
+                    </div>
+                    <div class="traffic-col yellow">
+                        <div class="traffic-header">⚠️ Gult ljus</div>
+                        <ul class="traffic-list">${s.yellow.map(i => `<li>${i}</li>`).join('')}</ul>
+                    </div>
+                    <div class="traffic-col red">
+                        <div class="traffic-header">🛑 Rött ljus</div>
+                        <ul class="traffic-list">${s.red.map(i => `<li>${i}</li>`).join('')}</ul>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function renderIncidents(s) {
+            return `<div class="slide-incidents">
+                <h2>${s.title}</h2>
+                <div class="subtitle">${s.subtitle}</div>
+                <div class="incidents-grid">
+                    ${s.cases.map((c, i) => `
+                        <div class="incident-card" onclick="showIncident(${currentSlideIndex}, ${i})">
+                            <div class="incident-name">${c.name}</div>
+                            <div class="incident-age">${c.age} år</div>
+                            <div class="incident-platform">${c.platform} • ${c.date}</div>
+                            <div class="incident-desc">${c.description}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        function showIncident(slideIdx, caseIdx) {
+            const incident = slidesData[slideIdx].cases[caseIdx];
+            document.getElementById('incidentModalContent').innerHTML = `
+                <h3>${incident.name}, ${incident.age} år</h3>
+                <p>${incident.description}</p>
+                ${incident.source ? `<p><a href="${incident.source}" target="_blank" class="source-button">Läs dokumentation →</a></p>` : ''}
+            `;
+            document.getElementById('incidentModal').classList.add('active');
+        }
+
+        function closeIncidentModal(e) {
+            if (window.cardTypewriter) clearInterval(window.cardTypewriter);
+            document.getElementById('incidentModal').classList.remove('active');
+        }
+
+        function showSources() {
+            const slide = slidesData[currentSlideIndex];
+            if (!slide.sources || slide.sources.length === 0) return;
+
+            const content = document.getElementById('sourcesModalContent');
+            content.innerHTML = `
+                <h3>📚 Källor</h3>
+                ${slide.sources.map(s => `
+                    <div class="source-item">
+                        <div class="source-name">${s.name}</div>
+                        ${s.url ? `<a href="${s.url}" target="_blank" class="source-url">${s.url}</a>` : ''}
+                    </div>
+                `).join('')}
+            `;
+            document.getElementById('sourcesModal').classList.add('active');
+        }
+
+        function closeSourcesModal(e) {
+            document.getElementById('sourcesModal').classList.remove('active');
+        }
+
+        function updateSourceButton() {
+            const slide = slidesData[currentSlideIndex];
+            const btn = document.getElementById('sourceBtn');
+            if (slide.sources && slide.sources.length > 0) {
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
+        function renderPromptDemo(s) {
+            return `<div class="slide-prompt-demo">
+                <h2>🧠 ${s.title}</h2>
+                <div class="subtitle">${s.subtitle || 'En prompt att kopiera och använda i Gemini'}</div>
+                <div class="prompt-box">
+                    <button class="copy-btn" onclick="copyPrompt(this, '${s.id}')">📋 Kopiera</button>
+                    <pre id="prompt-${s.id}">${s.prompt.replace(/\[([^\]]+)\]/g, '<span class="placeholder">[$1]</span>')}</pre>
+                </div>
+                ${s.example_topic ? `
+                <div class="prompt-example">
+                    <div class="prompt-example-label">💡 Exempel på ämne:</div>
+                    <div class="prompt-example-text">"${s.example_topic}"</div>
+                </div>
+                ` : ''}
+                ${s.why ? `
+                <div class="prompt-why">
+                    <strong>Varför?</strong> ${s.why}
+                </div>
+                ` : ''}
+            </div>`;
+        }
+
+        function copyPrompt(btn, id) {
+            const pre = document.getElementById('prompt-' + id);
+            const text = pre.innerText.replace(/\s+/g, ' ').trim();
+            navigator.clipboard.writeText(text).then(() => {
+                btn.textContent = '✅ Kopierad!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Kopiera';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function renderVideoLink(s) {
+            return `<div class="slide-video-link">
+                <h2>${s.icon || '🎬'} ${s.title}</h2>
+                <div class="subtitle">${s.subtitle || ''}</div>
+                <a href="${s.url}" target="_blank" class="video-play-button">
+                    <div class="play-icon">▶</div>
+                    <div class="play-text">Spela video</div>
+                </a>
+                <p class="video-description">${s.description || ''}</p>
+            </div>`;
+        }
+
+        // ===== STEP-SLIDE RENDERER =====
+        let currentStepIndex = 0;
+
+        function renderStepSlide(s) {
+            currentStepIndex = 0;
+            window.handleNextStep = () => {
+                if (currentStepIndex < s.steps.length - 1) {
+                    currentStepIndex++;
+                    updateStepDisplay();
+                    return true;
+                }
+                return false;
+            };
+            let html = `<div class="slide-step">
+                <div class="step-container" onclick="if(window.handleNextStep && !window.handleNextStep()) nextSlide();">`;
+
+            s.steps.forEach((step, i) => {
+                html += `<div class="step-content ${i === 0 ? 'active' : ''}" data-step="${i}">`;
+
+                if (step.type === 'headline') {
+                    html += `<div class="step-title">${step.title}</div>
+                             <div class="step-subtitle">${step.subtitle}</div>`;
+                } else if (step.type === 'definition') {
+                    html += `<div class="step-definition">${step.text}</div>`;
+                } else if (step.type === 'list') {
+                    html += `<ul class="step-list">`;
+                    step.items.forEach(item => {
+                        const hlClass = item.highlight ? ' class="highlight"' : '';
+                        html += `<li${hlClass}><strong>${item.title}:</strong> <span>${item.desc}</span></li>`;
+                    });
+                    html += `</ul>`;
+                    if (step.footer) {
+                        html += `<div class="step-footer">${step.footer}</div>`;
+                    }
+                }
+
+                html += `</div>`;
+            });
+
+            html += `</div>
+                <div class="step-dots">
+                    ${s.steps.map((_, i) => `<div class="step-dot ${i === 0 ? 'active' : ''}" onclick="goToStep(${i}, event)"></div>`).join('')}
+                </div>
+            </div>`;
+
+            return html;
+        }
+
+        function goToStep(stepIndex, event) {
+            event.stopPropagation();
+            currentStepIndex = stepIndex;
+            updateStepDisplay();
+        }
+
+        function updateStepDisplay() {
+            const steps = document.querySelectorAll('.step-content');
+            const dots = document.querySelectorAll('.step-dot');
+
+            steps.forEach((step, i) => {
+                step.classList.toggle('active', i === currentStepIndex);
+            });
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentStepIndex);
+            });
+        }
+
+        function renderCaseGrid(s) {
+            return `<div class="slide-case-grid"><h2>${s.title}</h2><div class="cg-cards">
+            ${s.cards.map((c, i) => `
+                <div class="cg-card" style="--card-color:${c.color||'var(--accent)'}" onclick="this.classList.toggle('expanded')">
+                <div class="cg-title">${c.title}</div>
+                ${c.image ? `<div class="cg-image-container" style="margin:16px 0;"><img src="${c.image}" style="width:100%; border-radius:8px; max-height:200px; object-fit:cover; cursor:zoom-in;" onclick="event.stopPropagation(); openLightbox('${c.image}')" /></div>` : ''}
+                ${c.images && c.images.length > 0 ? `<div class="cg-image-grid" onclick="event.stopPropagation();">${c.images.map(img => `<img src="${img}" onclick="openLightbox('${img}')" />`).join('')}</div>` : ''}
+                <div class="cg-desc">${c.desc}</div>
+                </div>
+            `).join('')}
+            </div></div>`;
+        }
+
+        function renderRewriteProgression(s) {
+            const tpl = s.template;
+            const first = s.steps[0];
+            const buildSentence = (step) => {
+                let result = tpl;
+                for (const key in step) {
+                    result = result.replace(`{${key}}`, `<span class="rw-slot" data-key="${key}">${step[key]}</span>`);
+                }
+                return result;
+            };
+            return `<div class="slide-rewrite" id="rewrite-${s.id}" onclick="if(window.handleNextStep && window.handleNextStep()) return; else nextSlide();">
+                <div class="rewrite-prefix" data-prefixes='${JSON.stringify(s.prefix||[])}'></div>
+                <div class="rewrite-main">${buildSentence(first)}</div>
+            </div>`;
+        }
+
+        function initRewriteProgression(container, steps, prefixes) {
+            if(!container) return;
+            let currentStep = 0;
+            let animating = false;
+            const mainEl = container.querySelector('.rewrite-main');
+            const prefixEl = container.querySelector('.rewrite-prefix');
+
+            async function eraseSlot(slot, text, keepLength = 0) {
+                slot.classList.add('active');
+                const plainText = slot.textContent;
+                for (let i = plainText.length; i >= keepLength; i--) {
+                slot.textContent = plainText.substring(0, i);
+                await new Promise(r => setTimeout(r, 40));
+                }
+            }
+
+            async function typeSlot(slot, text, keepLength = 0, isChanged = false) {
+                const prefixText = text.substring(0, keepLength);
+                const suffixText = text.substring(keepLength);
+                
+                for (let i = 0; i <= suffixText.length; i++) {
+                    if (isChanged && keepLength > 0) {
+                        slot.innerHTML = prefixText + '<span class="changed">' + suffixText.substring(0, i) + '</span>';
+                    } else {
+                        slot.textContent = text.substring(0, keepLength + i);
+                    }
+                    await new Promise(r => setTimeout(r, 50));
+                }
+                slot.classList.remove('active');
+                if (isChanged && keepLength === 0) {
+                    slot.classList.add('changed');
+                }
+            }
+
+            async function transitionTo(stepIdx) {
+                animating = true;
+                const step = steps[stepIdx];
+                const prevStep = steps[stepIdx - 1];
+
+                const slots = mainEl.querySelectorAll('.rw-slot');
+                slots.forEach(slot => {
+                    slot.classList.remove('changed');
+                    slot.innerHTML = slot.textContent; // Rensa eventuella inre färg-markeringar från förra steget
+                });
+
+                if (prefixEl && prefixes[stepIdx - 1]) {
+                prefixEl.textContent = prefixes[stepIdx - 1];
+                prefixEl.classList.add('visible');
+                await new Promise(r => setTimeout(r, 800));
+                }
+
+                for (const slot of slots) {
+                const key = slot.dataset.key;
+                const prev = prevStep[key] || "";
+                const curr = step[key] || "";
+                if (prev !== curr) {
+                    let commonLen = 0;
+                    while(commonLen < prev.length && commonLen < curr.length && prev[commonLen] === curr[commonLen]) {
+                        commonLen++;
+                    }
+                    await eraseSlot(slot, prev, commonLen);
+                    await new Promise(r => setTimeout(r, 200));
+                    await typeSlot(slot, curr, commonLen, true);
+                }
+                }
+
+                await new Promise(r => setTimeout(r, 600));
+                if (prefixEl) prefixEl.classList.remove('visible');
+                animating = false;
+            }
+
+            window.handleNextStep = () => {
+                if (animating) return true;
+                if (currentStep < steps.length - 1) {
+                    currentStep++;
+                    transitionTo(currentStep);
+                    return true;
+                }
+                return false;
+            };
+            
+            container.onclick = function(e) {
+                if (window.handleNextStep && !window.handleNextStep()) {
+                    nextSlide();
+                }
+            };
+        }
+
+        function typewriterHtml(container, htmlString) {
+            let i = 0;
+            let isTag = false;
+            let currentHTML = "";
+            container.innerHTML = '<span class="cursor"></span>';
+            // We use a simple tag to ensure we don't double-animate
+            const animationId = Date.now();
+            container.dataset.animId = animationId;
+
+            function typeNext() {
+                // Stop if a new animation started
+                if (container.dataset.animId != animationId) return;
+                // Stop if slide is closed
+                if (document.getElementById('slideView').style.display === 'none') return;
+                
+                if (i < htmlString.length) {
+                    if (htmlString[i] === '<') isTag = true;
+                    
+                    currentHTML += htmlString[i];
+                    i++;
+
+                    if (isTag) {
+                        if (htmlString[i-1] === '>') {
+                            isTag = false;
+                            container.innerHTML = currentHTML + '<span class="cursor"></span>';
+                            // Scroll if it was a line break
+                            if (htmlString.substring(i-4, i) === '<br>' || htmlString.substring(i-5, i) === '<br/>') {
+                                const cursorObj = container.querySelector('.cursor');
+                                if (cursorObj) cursorObj.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            }
+                            setTimeout(typeNext, 5);
+                        } else {
+                            typeNext();
+                        }
+                    } else {
+                        container.innerHTML = currentHTML + '<span class="cursor"></span>';
+                        // Keep cursor roughly centered as it types long paragraphs
+                        if (i % 30 === 0) {
+                            const cursorObj = container.querySelector('.cursor');
+                            if (cursorObj) cursorObj.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }
+                        setTimeout(typeNext, 20 + Math.random() * 15);
+                    }
+                } else {
+                    container.innerHTML = currentHTML;
+                }
+            }
+            setTimeout(typeNext, 200);
+        }
+
+        function renderEmailMockup(s) {
+            const processedText = replaceNames(s.text);
+            const processedFrom = replaceNames(s.from);
+            const processedTo = replaceNames(s.to);
+            const processedSubject = replaceNames(s.subject);
+            
+            setTimeout(() => {
+                const container = document.getElementById('email-body-' + s.id);
+                if (container) typewriterHtml(container, processedText);
+            }, 100);
+
+            return `<div class="slide-email">
+                <div class="email-header">
+                    <div class="email-dots">
+                        <div class="email-dot red"></div>
+                        <div class="email-dot yellow"></div>
+                        <div class="email-dot green"></div>
+                    </div>
+                </div>
+                <div class="email-meta" style="position: relative;">
+                    <div><span>Från:</span> <div class="meta-val">${processedFrom}</div></div>
+                    <div><span>Till:</span> <div class="meta-val">${processedTo}</div></div>
+                    <div class="meta-subject">${processedSubject}</div>
+                    <button class="copy-btn" style="position: absolute; top: 25px; right: 30px;" onclick="copyTextFromBase64(this, '${btoa(unescape(encodeURIComponent(processedText)))}')">📋 Kopiera text</button>
+                </div>
+                <div class="email-body" id="email-body-${s.id}"></div>
+            </div>`;
+        }
+
+        function copyTextFromBase64(btn, b64) {
+            const htmlText = decodeURIComponent(escape(atob(b64)));
+            const plainText = htmlText.replace(/<br\s*[\/]?>/gi, '\n').replace(/<\/?[^>]+(>|$)/g, "");
+            navigator.clipboard.writeText(plainText.trim()).then(() => {
+                btn.textContent = '✅ Kopierad!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '📋 Kopiera text';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function renderDocumentMockup(s) {
+            let titleHtml = '';
+            let bodyHtml = s.reflection || '';
+            if (s.reflection) {
+                const parts = s.reflection.split('<br><br>');
+                if (parts.length > 1) {
+                    titleHtml = `<div style="color: var(--accent); font-size: 3.5rem; font-weight: 800; margin-bottom: 30px; line-height: 1.1;">${parts[0]}</div>`;
+                    bodyHtml = parts.slice(1).join('<br><br>');
+                }
+            }
+            bodyHtml = bodyHtml.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+
+            return `<div style="display: flex; gap: 80px; max-width: 1400px; width: 100%; align-items: center; justify-content: center; text-align: left;">
+                <div style="flex: 1;">
+                    ${titleHtml}
+                    <div style="font-size: clamp(1.8rem, 2.5vw, 2.4rem); color: rgba(255,255,255,0.9); font-weight: 400; line-height: 1.5;">
+                        ${bodyHtml}
+                    </div>
+                </div>
+                <div style="flex: 1; display: flex; justify-content: center;">
+                    <div class="email-container" style="width: 100%; max-width: 480px; aspect-ratio: 1 / 1.414; border-radius: 4px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6); display: flex; flex-direction: column; background: #fff;">
+                        <div class="email-header" style="background: #eef2f5; color: #333; border-bottom: 1px solid #ccc; padding: 12px 15px; font-size: 1rem; flex-shrink: 0; font-family: 'Inter', sans-serif;">
+                            <div><b>Dokument:</b> ${s.docTitle}</div>
+                        </div>
+                        <div class="email-body" style="font-family: 'Times New Roman', Times, serif; font-size: 1.05rem; color: #222; padding: 30px 35px; line-height: 1.4; flex-grow: 1; overflow-y: hidden; position: relative;">
+                            ${s.text}
+                            <div style="position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(transparent, #fff 80%);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        function renderNameInput(s) {
+            return `<div class="slide-name-input">
+                <h2>${s.title}</h2>
+                <div class="subtitle">${s.subtitle}</div>
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label>Elevens namn:</label>
+                        <input type="text" id="inputElev" value="${globalNames.elev}" onkeyup="globalNames.elev = this.value || ''" placeholder="">
+                    </div>
+                    <div class="input-group">
+                        <label>Mammans namn:</label>
+                        <input type="text" id="inputMamma" value="${globalNames.mamma}" onkeyup="globalNames.mamma = this.value || ''" placeholder="">
+                    </div>
+                    <div class="input-group">
+                        <label>Lärarens namn:</label>
+                        <input type="text" id="inputLarare" value="${globalNames.larare}" onkeyup="globalNames.larare = this.value || ''" placeholder="">
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        let timerInterval = null;
+        window.startTimer = function(inputId, displayId, digitsId, overlayId) {
+            let timeStr = document.getElementById(inputId).value.replace(/[^0-9:]/g, '');
+            if (!timeStr) return;
+            
+            // Allow fast typing like "1430" without the colon
+            if (timeStr.length === 4 && !timeStr.includes(':')) {
+                timeStr = timeStr.substring(0, 2) + ':' + timeStr.substring(2);
+            } else if (timeStr.length === 3 && !timeStr.includes(':')) {
+                timeStr = timeStr.substring(0, 1) + ':' + timeStr.substring(1);
+            }
+
+            const parts = timeStr.split(':');
+            const hours = parseInt(parts[0], 10) || 0;
+            const minutes = parseInt(parts[1], 10) || 0;
+            
+            const now = new Date();
+            const target = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes, 0, 0);
+            
+            // If target is in the past, assume tomorrow
+            if (target < now) {
+                target.setDate(target.getDate() + 1);
+            }
+
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            const displayEl = document.getElementById(displayId);
+            displayEl.style.display = 'flex';
+            
+            const digitsEl = document.getElementById(digitsId);
+            const overlayEl = document.getElementById(overlayId);
+            const overlayText = overlayEl.querySelector('.timer-fullscreen-text');
+
+            if (timerInterval) clearInterval(timerInterval);
+            
+            function showOverlay(text, duration) {
+                overlayText.textContent = text;
+                overlayEl.classList.add('visible');
+                if (duration) {
+                    setTimeout(() => overlayEl.classList.remove('visible'), duration);
+                }
+            }
+
+            let triggeredMilestones = {};
+
+            function update() {
+                const diff = target - new Date();
+                if (diff <= 0) {
+                    clearInterval(timerInterval);
+                    digitsEl.textContent = "00:00";
+                    showOverlay("Nu fortsätter vi! 😊", 0);
+                    return;
+                }
+                
+                const totalSeconds = Math.floor(diff / 1000);
+                const m = Math.floor(totalSeconds / 60);
+                const s = totalSeconds % 60;
+                
+                digitsEl.textContent = m.toString().padStart(2, '0') + ':' + s.toString().padStart(2, '0');
+                
+                const checkMilestone = (min, text) => {
+                    if (totalSeconds <= min * 60 && !triggeredMilestones[min]) {
+                        triggeredMilestones[min] = true;
+                        // Only show if we are within 15 seconds of the milestone (prevents old milestones from firing immediately on start)
+                        if (totalSeconds >= min * 60 - 15) {
+                            showOverlay(text, 10000);
+                        }
+                    }
+                };
+
+                checkMilestone(10, "10 minuter kvar till återsamling");
+                checkMilestone(5, "5 minuter kvar till återsamling");
+                checkMilestone(4, "4 minuter kvar");
+                checkMilestone(3, "3 minuter kvar");
+                checkMilestone(2, "2 minuter kvar");
+                checkMilestone(1, "1 minut kvar!");
+            }
+            update();
+            timerInterval = setInterval(update, 1000);
+        };
+
+        function renderInteractiveTimer(s) {
+            return `<div class="slide-timer">
+                <h2>${s.title}</h2>
+                <div class="subtitle">${s.subtitle}</div>
+                <div class="timer-setup" id="setup-${s.id}">
+                    <label>Återsamling kl:</label>
+                    <input type="text" id="input-${s.id}" value="14:30" placeholder="TT:MM" style="width: 180px; text-align: center;" autocomplete="off">
+                    <button onclick="startTimer('input-${s.id}', 'display-${s.id}', 'digits-${s.id}', 'overlay-${s.id}')">Starta Timer</button>
+                </div>
+                <div class="timer-display" id="display-${s.id}">
+                    <div class="timer-digits" id="digits-${s.id}">00:00</div>
+                    <div style="font-size: 2rem; color: #888; text-transform: uppercase; letter-spacing: 5px; margin-top: 10px; font-weight: 600;">Kvar till återsamling</div>
+                </div>
+                <div class="timer-fullscreen-overlay" id="overlay-${s.id}">
+                    <div class="timer-fullscreen-text"></div>
+                </div>
+            </div>`;
+        }
+
+        function renderConversation(s) {
+            return `<div class="slide-conversation" id="conv-${s.id}" onclick="if(window.handleNextStep && window.handleNextStep()) return; else nextSlide();">
+                ${s.messages.map((m, i) => {
+                    const textHtml = m.text.replace(/\n/g, '<br>').replace(/\*([^*]+)\*/g, '<em>$1</em>');
+                    let copyBtn = '';
+                    if (i === 0) {
+                        const b64 = btoa(unescape(encodeURIComponent(m.text)));
+                        copyBtn = `<div style="display: flex; justify-content: flex-end; width: 100%; margin-top: 10px;"><button class="copy-btn" onclick="event.stopPropagation(); copyTextFromBase64(this, '${b64}')">📋 Kopiera prompt</button></div>`;
+                    }
+                    return `
+                    <div class="conv-message ${i === 0 ? 'active' : ''}" style="padding: 0; background: transparent; box-shadow: none; align-self: ${m.role === 'user' ? 'flex-end' : 'flex-start'};">
+                        <div class="conv-${m.role}" style="padding: 20px 25px; border-radius: 20px; border-bottom-${m.role === 'user' ? 'right' : 'left'}-radius: 4px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 100%;">
+                            <div class="conv-meta">${m.role === 'user' ? 'DU' : 'AI'}</div>
+                            <div class="conv-text">${textHtml}</div>
+                        </div>
+                        ${copyBtn}
+                    </div>`;
+                }).join('')}
+            </div>`;
+        }
+
+        function initConversation(container, messages) {
+            if(!container) return;
+            let currentStep = 0;
+            const msgEls = container.querySelectorAll('.conv-message');
+            
+            window.handleNextStep = () => {
+                if (currentStep < messages.length - 1) {
+                    currentStep++;
+                    const nextMsg = msgEls[currentStep];
+                    nextMsg.classList.add('active');
+                    setTimeout(() => {
+                        nextMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 50);
+                    return true;
+                }
+                return false;
+            };
+        }
+
+        function renderToolLinks(s) {
+            return `<div class="slide-tools">
+                <h2>${s.title}</h2>
+                <div class="tools-grid">
+                    ${s.tools.map(t => `
+                        <a href="${t.url}" target="_blank" class="tool-card">
+                            <div class="tool-icon">${t.icon}</div>
+                            <div class="tool-name">${t.name}</div>
+                            <div class="tool-desc">${t.desc}</div>
+                        </a>
+                    `).join('')}
+                </div>
+            </div>`;
+        }
+
+        function renderTokenDemo(s) {
+            return `<div class="slide-token-demo">
+                <h2>${s.title}</h2>
+                ${s.description ? `<div class="desc">${s.description}</div>` : ''}
+                <div class="demo-box">
+                    <div class="prompt-area">
+                        "${s.prompt}<span class="predicted" id="w1"></span><span class="predicted" id="w2"></span><span class="predicted" id="w3"></span><span class="token-cursor" id="tokenCursor"></span>"
+                    </div>
+                    <div class="options" id="tokenOptions">
+                        <div class="option" onclick="selectToken(this,'livslångt')">livslångt <span class="probability">85%</span></div>
+                        <div class="option" onclick="selectToken(this,'lustfyllt')">lustfyllt <span class="probability">10%</span></div>
+                        <div class="option" onclick="selectToken(this,'tryggt')">tryggt <span class="probability">4%</span></div>
+                        <div class="option" onclick="selectToken(this,'hållbart')">hållbart <span class="probability">1%</span></div>
+                    </div>
+                    <div class="explanation" id="tokenExplanation">
+                        <strong>👆 Klicka på ett ord!</strong><br>AI:n ser "${s.prompt}" och beräknar sannolikheten för varje möjligt nästa ord.
+                    </div>
+                    <button class="reset-btn" onclick="resetTokenDemo()">↻ Börja om</button>
+                </div>
+            </div>`;
+        }
+
+        let tokenStep = 0;
+        let selectedWords = [];
+
+            // Complete branching tree: each word choice affects next options
+            const tokenTree = {
+                // Prompt: "Förskolan ska lägga grunden för ett"
+                start: [
+                    { word: 'livslångt', prob: '85%' },
+                    { word: 'lustfyllt', prob: '10%' },
+                    { word: 'tryggt', prob: '4%' },
+                    { word: 'hållbart', prob: '1%' }
+                ],
+                'livslångt': [
+                    { word: 'lärande', prob: '98%' },
+                    { word: 'intresse', prob: '1%' },
+                    { word: 'engagemang', prob: '0.5%' },
+                    { word: 'utforskande', prob: '0.5%' }
+                ],
+                'lärande': [
+                    { word: '.', prob: '50%' },
+                    { word: 'som', prob: '30%' },
+                    { word: 'och', prob: '15%' },
+                    { word: 'genom', prob: '5%' }
+                ],
+                'som': [
+                    { word: 'är', prob: '60%' },
+                    { word: 'bygger', prob: '20%' },
+                    { word: 'utgår', prob: '15%' },
+                    { word: 'skapar', prob: '5%' }
+                ],
+                'är': [
+                    { word: 'roligt', prob: '40%' },
+                    { word: 'meningsfullt', prob: '30%' },
+                    { word: 'tryggt', prob: '20%' },
+                    { word: 'utmanande', prob: '10%' }
+                ],
+                'roligt': [
+                    { word: '.', prob: '80%' },
+                    { word: 'och', prob: '20%' }
+                ],
+                'meningsfullt': [
+                    { word: '.', prob: '70%' },
+                    { word: 'och', prob: '30%' }
+                ],
+                'tryggt': [
+                    { word: 'klimat', prob: '60%' },
+                    { word: 'liv', prob: '20%' },
+                    { word: '.', prob: '15%' },
+                    { word: 'lärande', prob: '5%' }
+                ],
+                'och': [
+                    { word: 'meningsfullt', prob: '40%' },
+                    { word: 'lärorikt', prob: '30%' },
+                    { word: 'tryggt', prob: '20%' },
+                    { word: 'roligt', prob: '10%' }
+                ],
+                'lärorikt': [
+                    { word: '.', prob: '90%' },
+                    { word: 'och', prob: '10%' }
+                ],
+                'klimat': [
+                    { word: 'där', prob: '60%' },
+                    { word: '.', prob: '20%' },
+                    { word: 'och', prob: '15%' },
+                    { word: 'för', prob: '5%' }
+                ],
+                'där': [
+                    { word: 'alla', prob: '50%' },
+                    { word: 'barn', prob: '30%' },
+                    { word: 'lärande', prob: '15%' },
+                    { word: 'vi', prob: '5%' }
+                ],
+                'alla': [
+                    { word: 'barn', prob: '80%' },
+                    { word: 'får', prob: '20%' }
+                ],
+                'barn': [
+                    { word: 'får', prob: '60%' },
+                    { word: 'kan', prob: '30%' },
+                    { word: '.', prob: '10%' }
+                ],
+                'får': [
+                    { word: 'utvecklas', prob: '70%' },
+                    { word: 'leka', prob: '20%' },
+                    { word: 'vara', prob: '10%' }
+                ],
+                'utvecklas': [
+                    { word: '.', prob: '80%' },
+                    { word: 'och', prob: '20%' }
+                ],
+                'lustfyllt': [
+                    { word: 'lärande', prob: '80%' },
+                    { word: 'utforskande', prob: '10%' },
+                    { word: 'klimat', prob: '5%' },
+                    { word: 'möte', prob: '5%' }
+                ],
+                'utforskande': [
+                    { word: 'av', prob: '50%' },
+                    { word: '.', prob: '30%' },
+                    { word: 'i', prob: '15%' },
+                    { word: 'och', prob: '5%' }
+                ],
+                'av': [
+                    { word: 'omvärlden', prob: '60%' },
+                    { word: 'naturen', prob: '20%' },
+                    { word: 'språket', prob: '20%' }
+                ],
+                'omvärlden': [
+                    { word: '.', prob: '90%' },
+                    { word: 'och', prob: '10%' }
+                ],
+                'hållbart': [
+                    { word: 'samhälle', prob: '70%' },
+                    { word: 'liv', prob: '15%' },
+                    { word: 'lärande', prob: '10%' },
+                    { word: 'och', prob: '5%' }
+                ],
+                'samhälle': [
+                    { word: '.', prob: '50%' },
+                    { word: 'där', prob: '30%' },
+                    { word: 'och', prob: '15%' },
+                    { word: 'genom', prob: '5%' }
+                ],
+                'liv': [
+                    { word: '.', prob: '50%' },
+                    { word: 'i', prob: '20%' },
+                    { word: 'och', prob: '20%' },
+                    { word: 'som', prob: '10%' }
+                ]
+            };
+
+            function selectToken(el, word) {
+                if (tokenStep >= 3) return;
+                document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                el.classList.add('selected');
+                const span = document.getElementById('w' + (tokenStep + 1));
+                // Do not add space if the word is a period
+                span.textContent = (word === '.' ? '' : ' ') + word;
+                span.classList.add('visible');
+                selectedWords.push(word);
+                tokenStep++;
+
+                if (tokenStep >= 3) {
+                    document.getElementById('tokenOptions').style.display = 'none';
+                    document.getElementById('tokenCursor').style.display = 'none';
+                    document.getElementById('tokenExplanation').innerHTML = '<strong>✨ Klart!</strong><br><br>Så fungerar Generativ AI: den räknar ut nästa ord baserat på matematiska sannolikheter från sin träningsdata (tex. Lgr22). <em>Varje ord du valde ändrade kontexten för nästa gissning</em> — men är det hela sanningen?';
+                } else {
+                    // Show next set of options based on what was just selected
+                    setTimeout(() => {
+                        const nextOpts = tokenTree[word] || tokenTree['lärande'];
+                        const container = document.getElementById('tokenOptions');
+                        container.innerHTML = nextOpts.map(o =>
+                            `<div class="option" onclick="selectToken(this,'${o.word}')">${o.word} <span class="probability">${o.prob}</span></div>`
+                        ).join('');
+                        document.getElementById('tokenExplanation').innerHTML = `<strong>Bra!</strong> Du valde "<em>${word}</em>" — nu har kontexten ändrats och gissningsmaskinen beräknar nya sannolikheter.`;
+                    }, 300);
+                }
+        }
+
+        function resetTokenDemo() {
+            tokenStep = 0;
+            selectedWords = [];
+            ['w1', 'w2', 'w3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.textContent = ''; el.classList.remove('visible'); }
+            });
+            const cursor = document.getElementById('tokenCursor');
+            const opts = document.getElementById('tokenOptions');
+            if (cursor) cursor.style.display = 'inline-block';
+            if (opts) {
+                opts.style.display = 'flex';
+                opts.innerHTML = tokenTree.start.map(o =>
+                    `<div class="option" onclick="selectToken(this,'${o.word}')">${o.word} <span class="probability">${o.prob}</span></div>`
+                ).join('');
+            }
+            const expl = document.getElementById('tokenExplanation');
+            if (expl) expl.innerHTML = '<strong>👆 Klicka på ett ord!</strong><br>AI:n ser prompten och beräknar matematiskt sannolikheten för varje möjligt nästa ord baserat på t.ex. Lgr22.';
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+            
+            if (!document.getElementById('slideView').classList.contains('active')) return;
+            
+            if (e.key === 'Escape') {
+                closeSlide();
+            } else if (e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                if (window.handleNextStep && window.handleNextStep()) return;
+                nextSlide();
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                prevSlide();
+            }
+        });
+
+        // Init
+        loadSlides();
+    </script>
+</body>
+
+</html>

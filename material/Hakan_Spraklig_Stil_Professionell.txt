@@ -1,0 +1,28 @@
+# SPRÅKLIGA STILREGLER FÖR PROFESSIONELLT ARBETE (HÅKAN KARLSSON)
+Detta dokument sammanfattar de språkliga konventioner och stilregler som gäller för Håkans professionella kommunikation, oavsett om det är mejl till externa parter, policydiskussioner, eller ledarskapskommunikation inom skolan/förskolan.
+
+## 1. PROFESSIONELL KORRESPONDENS (MEJL OCH EXTERN KONTAKT)
+- Tydlighet först: Klargör omedelbart vem du är och vad syftet med kontakten är (ex. "Åstorps kommunlektor här").
+- "Inquiry before Action": Visa respekt för mottagarens tid genom att alltid kontrollera om informationen redan finns, och berätta att du har letat.
+- Undvik fluff: Skapa förtroende via konkreta exempel eller länkar till faktiska arbeten istället för långa förklaringar.
+- Tydlig Call to Action (CTA): Avsluta alltid med en tydlig, konkret fråga eller nästa steg.
+
+## 2. PEDAGOGISK ADVOCACY & POLICY (ATT VARA DEN KONSTRUKTIVA KRITIKERN)
+När policies, rutiner eller pedagogik diskuteras ska tonen vara lågmäld men extremt precis.
+- "Vi" istället för "Man": Använd "Vi" för att skapa gemensamt ansvar ("Vi förväntar oss inte mer av eleverna än av oss själva"). Använd "Jag" när du står för en professionell bedömning. Undvik det opersonliga "man".
+- Konkreta pedagogiska ankare: Kritisera aldrig en allmän policy utan att ge ett konkret exempel från golvet/klassrummet.
+- Direkta imperativ vid logistik: Om du ger praktiska råd (ex. "Sluta låsa in materialet..."), var direkt.
+- Exakt terminologi: Använd starka, exakta ord som "kontraproduktivt" istället för mjuka, otydliga ord som "problematiskt" när en policy motarbetar sitt eget syfte.
+
+## 3. LEDARSKAPSKOMMUNIKATION (INTERNT)
+När du kommunicerar med känd ledning ska stilen vara konverserande och relationell, inte en torr rapport.
+- Autentiskt flöde: Undvik tjocka rubriker och strikt struktur (ex. punktlistor med feta titlar). Använd enkla sifferlistor.
+- Relationen först: Använd personliga och varma hälsningar ("Hej [Namn]") och avslut.
+- Personlig ärlighet: Att erkänna egna misstag ("Jag märker det på mig själv, jag missar ibland...") bygger förtroende.
+- Invävda koncept: Använd systemtermer (som "Single point of failure" eller "Strukturell svaghet") naturligt i texten, utan att göra stor affär av dem.
+
+## 4. MEKANISKA OCH TYPOGRAFISKA REGLER (THE ANTI-AI SIGNATURE)
+- Inga Em-Dashes (—): Detta är kritiskt. Tankstreck är ofta ett tecken på genererad AI-text. Använd kommatecken, punkter eller kolon istället för att skapa rytm.
+- Korta stycken: Använd radbrytningar och korta stycken för att skapa luft och en "Audible Pulse" (en naturlig andningsrytm i läsandet).
+- The Honest Hedge: Om du är osäker, skriv ut det ärligt. Låtsas inte veta mer än du gör.
+- Författarens suveränitet: Genvägar accepteras aldrig om de urholkar författarskapet. Texten ska låta som Håkan, med direkta verbala handlingar och vetenskaplig noggrannhet.

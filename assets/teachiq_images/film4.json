@@ -1,0 +1,193 @@
+{
+  "filmId": 4,
+  "filmTitle": "Create a Gem with expert panel",
+  "estimatedLength": "7 min",
+  "sections": [
+    {
+      "id": 1,
+      "type": "intro",
+      "title": "Opening",
+      "manuscript": "In this film, we'll create a Gem - a reusable AI assistant that combines an expert panel, coordinator, and your personal style guide from Film 3.\n\nGems are perfect for workflows you repeat often. Instead of pasting the same prompt every time, you create a Gem once and reuse it across conversations.\n\nYou'll need: Gemini account, your style document from Film 3 (or use the sample provided), and about 15 minutes.\n\nLet's get started.",
+      "prompts": [],
+      "notes": "Pro tip: Emphasize REUSABILITY - Gems save time on repeated workflows",
+      "completed": false,
+      "duration": "30 sec"
+    },
+    {
+      "id": 2,
+      "type": "demo",
+      "title": "Use Deep Research to create expert panel",
+      "manuscript": "First, I'll use Deep Research to create a well-grounded expert panel. Deep Research takes 5-10 minutes, but it produces much more detailed and research-backed expert profiles than regular Gemini.\n\nI'm opening Gemini and pasting this Deep Research prompt.",
+      "prompts": [
+        {
+          "id": 1,
+          "type": "system_instruction",
+          "title": "Deep Research: Create expert panel for Gem",
+          "content": "Research and compile a panel of 10 experts in assessment design, instructional writing, and user experience who can provide feedback on educational content. For each expert, provide:\n- Full name and professional title\n- Specific area of expertise\n- Unique perspective they bring\n- Research-backed approach to content review\n\nEnsure the panel represents diverse methodologies and perspectives.",
+          "role": "coordinator",
+          "sequence": 1,
+          "context": "Using Deep Research to create a research-backed expert panel for Gem",
+          "expected_outcome": "Deep Research will spend 5-10 minutes researching assessment design, instructional writing, and user experience. You'll see a progress indicator showing it's working. When complete, you'll get a comprehensive report (1000-1500 words) that includes: 10 expert profiles with detailed backgrounds, research-backed perspectives on content quality, and references to assessment design literature. The report will be much more detailed than a regular Gemini response because it's synthesized from multiple sources.",
+          "troubleshooting": "If Deep Research takes longer than 10 minutes: This is normal for complex topics. Wait patiently. If report is shorter than expected: Deep Research might have found limited sources. You can ask for 'more detail on each expert's background and perspective.'",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Show Deep Research progress indicator. Mention this is a good time for a coffee break.",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 3,
+      "type": "demo",
+      "title": "Wait for Deep Research",
+      "manuscript": "Deep Research is working now. This takes 5-10 minutes because it's analyzing multiple sources and synthesizing findings.\n\nThis is a good time for a coffee break. When you do this yourself, you can work on something else while Deep Research runs.\n\n[Fast-forward in video]\n\nDeep Research is done! Let me review the report.",
+      "prompts": [],
+      "notes": "Pro tip: Fast-forward this section in the video. Show progress indicator, then jump to completion.",
+      "completed": false,
+      "duration": "20 sec"
+    },
+    {
+      "id": 4,
+      "type": "demo",
+      "title": "Review Deep Research report",
+      "manuscript": "Here's the Deep Research report. Notice how detailed the expert profiles are compared to regular Gemini. Each expert has a full background, specific expertise, and research-backed perspective.\n\nI'm going to copy this entire expert panel description. I'll use it in my Gem Instructions.",
+      "prompts": [],
+      "notes": "Pro tip: Show scrolling through the report. Highlight the detail level.",
+      "completed": false,
+      "duration": "40 sec"
+    },
+    {
+      "id": 5,
+      "type": "demo",
+      "title": "Open Gem Manager",
+      "manuscript": "Now I'll create the Gem. I'm opening Gem Manager in Gemini's left sidebar.\n\nI click 'Create new Gem' and name it 'Content Review Assistant'.\n\nNow comes the important part: the Gem Instructions field. This is where I combine three components: the expert panel from Deep Research, the coordinator role, and my style guide from Film 3.",
+      "prompts": [],
+      "notes": "Pro tip: Show Gem Manager interface clearly. Show naming the Gem.",
+      "completed": false,
+      "duration": "40 sec"
+    },
+    {
+      "id": 6,
+      "type": "demo",
+      "title": "Build Gem Instructions",
+      "manuscript": "In the Instructions field, I'm pasting three things in order:\n\nFirst: The expert panel description from Deep Research.\n\nSecond: The coordinator instructions. This ensures I stay in control.\n\nThird: My style guide from Film 3. If you skipped Film 3, use the Sample Style Guide provided in the interface.\n\nHere's what the complete Gem Instructions look like.",
+      "prompts": [
+        {
+          "id": 2,
+          "type": "example_content",
+          "title": "Sample Style Guide (if you skipped Film 3)",
+          "content": "# Writing Style Guide for Assessment Platform Content\n\n## Purpose\nThis guide ensures all content on our assessment platform maintains consistent quality, clarity, and accessibility.\n\n## Tone and Voice\n- Professional but approachable\n- Clear and direct\n- Supportive\n- Confident with active voice\n\n## Sentence Structure\n- 15-20 words per sentence on average\n- Active voice preferred\n- One main idea per sentence\n- Mix short and medium sentences for rhythm\n\n## Formatting Conventions\n- Numbered lists for sequential steps\n- Bullet points for options\n- Bold for key terms on first use\n- Always include concrete examples\n\n## Terminology Standards\n- Assessment item (not question)\n- Learner (not student)\n- Scoring criteria (not rubric)\n- Validity and reliability (use correctly)\n\n## Feedback Pattern\nAlways structure feedback as:\n1. Observation: What we notice\n2. Suggestion: What we recommend\n3. Rationale: Why this matters",
+          "role": "user",
+          "sequence": 1,
+          "context": "Sample style guide to use if you skipped Film 3",
+          "expected_outcome": "This is a complete, ready-to-use style guide that you can paste into your Gem Instructions if you didn't create your own in Film 3.",
+          "troubleshooting": "If this doesn't match your organization: Adapt it! Change terminology and examples to fit your needs.",
+          "exported": false
+        },
+        {
+          "id": 3,
+          "type": "example_content",
+          "title": "Complete Gem Instructions Template",
+          "content": "# EXPERT PANEL\n\nYou are a panel of 10 experts with diverse specialist competencies. Your role is to provide feedback on assessment items and educational content.\n\n## Panel Members:\n1. Dr. Elena Rodriguez - Psychometrician\n2. Prof. James Chen - Cognitive psychologist\n3. Maria Johansson - Assessment designer\n4. Dr. Aisha Patel - Accessibility expert\n5. Tom Bergström - Subject matter expert\n6. Dr. Sarah Kim - Language specialist\n7. Marcus Okafor - Instructional designer\n8. Dr. Lisa Andersson - Educational researcher\n9. Johan Virtanen - Curriculum developer\n10. Dr. Priya Sharma - Learning analytics expert\n\n---\n\n# COORDINATOR ROLE\n\nYou are a professional facilitator. After the user provides content, ask:\n\n\"How would you like to proceed?\nA) Hear individual opinions\nB) Have the panel discuss together\nC) Request a synthesis\nD) Something else\"\n\nAfter each step, ask: \"What would you like to do next?\"\n\nNever proceed without explicit user direction.\n\n---\n\n# WRITING STYLE GUIDE\n\n## Tone and Voice\n- Professional but approachable\n- Clear and direct\n- Supportive and constructive\n\n## Feedback Pattern\n1. Observation: What we notice\n2. Suggestion: What we recommend\n3. Rationale: Why this matters\n\nAll feedback must be specific, actionable, and include rationale.",
+          "role": "coordinator",
+          "sequence": 1,
+          "context": "Complete Gem Instructions template",
+          "expected_outcome": "This is the complete Gem Instructions that combines Expert Panel + Coordinator + Style Guide. Copy this entire text into the Gem Instructions field.",
+          "troubleshooting": "If Coordinator doesn't ask for direction: Make sure the Coordinator section is included and complete.",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Show pasting all three components. Emphasize the order: Panel → Coordinator → Style.",
+      "completed": false,
+      "duration": "90 sec"
+    },
+    {
+      "id": 7,
+      "type": "demo",
+      "title": "Save and test the Gem",
+      "manuscript": "I click 'Save'. My Gem is now created.\n\nLet's test it. I open a new conversation and select my 'Content Review Assistant' Gem.\n\nNow I'll paste some example content to review.",
+      "prompts": [
+        {
+          "id": 4,
+          "type": "example_content",
+          "title": "Example content to test Gem",
+          "content": "Please review this assessment instruction:\n\n\"Make sure you explain the photosynthesis process in detail. Include all the important parts and don't forget to mention the factors that affect it. Your answer should be complete.\"",
+          "role": "user",
+          "sequence": 1,
+          "context": "Example content to test your Gem",
+          "expected_outcome": "The Coordinator will ask: 'How would you like to proceed? A) Hear individual opinions, B) Have the panel discuss together, C) Request a synthesis, D) Something else'. If you choose A, you'll get 10 individual expert opinions about the instruction's clarity, tone, and alignment with best practices. The feedback will follow your style guide.",
+          "troubleshooting": "If feedback doesn't follow style guide: Check that you pasted the style guide into Gem Instructions.",
+          "exported": false
+        }
+      ],
+      "notes": "Pro tip: Show Coordinator asking. Show yourself choosing option A.",
+      "completed": false,
+      "duration": "60 sec"
+    },
+    {
+      "id": 8,
+      "type": "demo",
+      "title": "Review Gem feedback",
+      "manuscript": "Perfect! The Coordinator asked me how to proceed. I chose option A: individual opinions.\n\nNotice how the feedback follows my style guide. It's professional but approachable. Each suggestion includes a rationale.\n\nThis is the power of Gems: consistent, reusable workflows that match YOUR voice.",
+      "prompts": [],
+      "notes": "Pro tip: Highlight specific examples of style guide being followed.",
+      "completed": false,
+      "duration": "50 sec"
+    },
+    {
+      "id": 9,
+      "type": "outro",
+      "title": "Closing",
+      "manuscript": "You've now created a Gem with an expert panel, coordinator, and your style guide. This Gem is reusable across all your conversations.\n\nTime to create this Gem: 15 minutes (including Deep Research). Time per review after that: 2 minutes. For 10 reviews per week, that's 20+ hours saved compared to manual review.\n\nIn the next film, we'll use NotebookLM to add source-based validation with citations.\n\nSee you in the next film.",
+      "prompts": [],
+      "notes": "Pro tip: Emphasize ROI - 2 minutes per review after setup.",
+      "completed": false,
+      "duration": "40 sec"
+    }
+  ],
+  "pause_task": {
+    "title": "Pause & Task: Create your Gem",
+    "duration": "20 minutes",
+    "task": "Create your own Gem with expert panel, coordinator, and style guide",
+    "steps": [
+      "Open a new Gemini conversation",
+      "Copy Deep Research prompt from interface",
+      "Paste in Gemini and choose Deep Research",
+      "Wait 5-10 minutes (coffee break!)",
+      "Copy entire expert panel description from report",
+      "Open Gem Manager, click Create new Gem",
+      "Name it Content Review Assistant",
+      "In Instructions: paste panel + coordinator + style guide",
+      "Click Save",
+      "Test: Open new conversation, select Gem, paste example content"
+    ],
+    "expected_output": "A functioning Gem with expert panel + coordinator + style guide",
+    "reflection_questions": [
+      "How does Gem differ from regular Gemini chat?",
+      "Which workflows would you like to turn into Gems?",
+      "How can Gems improve team efficiency?"
+    ]
+  },
+  "seminar_questions": [
+    {
+      "type": "experience",
+      "question": "How did you experience Deep Research compared to regular Gemini?"
+    },
+    {
+      "type": "comparison",
+      "question": "How does Gem differ from regular Gemini chat? When would you use each?"
+    },
+    {
+      "type": "workflow",
+      "question": "Which workflows would you like to turn into Gems?"
+    },
+    {
+      "type": "team",
+      "question": "How can Gems improve team efficiency?"
+    },
+    {
+      "type": "limitation",
+      "question": "What are the limitations of Gems?"
+    }
+  ]
+}
