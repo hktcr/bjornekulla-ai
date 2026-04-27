@@ -56,7 +56,7 @@
       "title": "Förståelse",
       "text": "\"Att vara extremt bra på att förutsäga nästa ord innebär att man förstår den underliggande verklighet som ledde till skapandet [valet] av just det ordet.\"",
       "author": "Ilya Sutskever, f.d. Chefsforskare OpenAI",
-      "comment": "💡 Den är alltså inte en glorifierad autokorrekt. För att vara så här träffsäker har AI:n tvingats bygga upp en underliggande förståelse för hur vår värld, vårt språk och våra ämnen hänger ihop.",
+      "comment": "💡 Den är alltså inte bara en avancerad ordprediktor. För att vara så här träffsäker har AI:n tvingats bygga upp en underliggande förståelse för hur vår värld, vårt språk och våra ämnen hänger ihop.",
       "style": "typewriter",
       "sources": [
         {
